@@ -8,7 +8,7 @@ Just a DEMO API built around SLIM framework and GraphQL-PHP
 
 From the project main directory:
 
-(on windows, use `winpty` before `docker exec ...`)
+(on windows, you may want to use `winpty` before `docker exec ...`)
 
 
 ```bash
@@ -22,3 +22,11 @@ Connect to container as CLI (optional)
 ```bash
 docker exec -ti gql_slim_api sh
 ```
+
+
+## GraphQL
+
+### Endpoints
+
+* `/graphql` The main api endpoint.
+* `/graphql/refs` Another api endpoint with another schema
