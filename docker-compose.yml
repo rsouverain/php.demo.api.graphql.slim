@@ -1,0 +1,53 @@
+version: "3.7"
+
+networks:
+    mainNet: ~
+
+# Careful, 'docker-compose down -v' will remove these volumes and associated datas, as well as 'docker volume prune'
+#volumes:
+#    data_mysql:
+
+services:
+
+  gql_slim_api:
+    build:
+      context: ./docker/images/php
+      dockerfile: Dockerfile
+    image: gql_slim_api:php7.3
+    environment:
+      - NODE_ENV=development
+      - TERM=xterm-color
+    cap_add:
+      - SYS_PTRACE
+    restart: on-failure
+    hostname: gql_slim_api
+    container_name: gql_slim_api
+    ports:
+      - "9632:9632"
+    volumes:
+      - type: "bind"
+        source: "./"
+        target: "/project"
+    env_file:
+      - .env
+    networks:
+        - mainNet
+    command: "/run.sh"
+    entrypoint: ""
+
+    # extra_hosts:
+    #     - "external_api:162.xx.xx.xx"
+    # depends_on:
+    #     - gql_slim_redis
+
+    # gql_slim_redis:
+    #     image: redis:4
+    #     container_name: gql_slim_redis
+    #     hostname: "gql_slim_redis"
+    #     privileged: true
+    #     cap_add:
+    #         - SYS_PTRACE
+    #     # ports:
+    #     #     - 6379:6379 # host:container
+    #     networks:
+    #         - mainNet
