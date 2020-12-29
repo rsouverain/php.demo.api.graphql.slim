@@ -74,12 +74,12 @@ $app->any('/hello', function (Request $request, ResponseInterface $response, $ar
     $nowUTC = new \DateTime('now', new \DateTimeZone('UTC'));
     $nowFR = clone($nowUTC);
     $nowFR->setTimezone(new \DateTimeZone('Europe/Paris'));
-    $response->getBody()->write("Hello World !! current DateTime in France(ISO8601): ".$nowFR->format(\DateTimeInterface::ISO8601));
+    $response->getBody()->write("Hello World !! current DateTime in Europe/Paris(ISO8601): ".$nowFR->format(\DateTimeInterface::ISO8601));
     return $response;
 });
 
 // Demo graphql endpoints
-$app->map(['GET', 'POST'], '/graphql', \App\Controller\GraphqlController::class.':mainEndpoint');
-$app->map(['GET', 'POST'], '/graphql/refs', \App\Controller\GraphqlController::class.':refsEndpoint');
+$app->map(['GET', 'POST'], '/graphql/blog', \App\Controller\GraphqlController::class.':blogEndpoint');
+$app->any('/graphql/refs', \App\Controller\GraphqlController::class.':refsEndpoint');
 
 $app->run();

@@ -28,5 +28,5 @@ docker exec -ti gql_slim_api sh
 
 ### Endpoints
 
-* `/graphql` The main api endpoint.
-* `/graphql/refs` Another api endpoint with another schema
+* `/graphql/blog` The 'blog' api endpoint and schema.
+* `/graphql/refs` Another 'refs' api endpoint with another schema

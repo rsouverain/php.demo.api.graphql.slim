@@ -27,6 +27,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN pecl install -o -f yaml \
     && docker-php-ext-enable yaml
 
+# @see https://github.com/phpredis/phpredis
+# @see https://medium.com/assoconnect/how-to-use-persistent-connections-with-redis-for-symfony-cache-with-php-fpm-3e7bd1100736
 RUN pecl install -o -f redis \
     && docker-php-ext-enable redis
 
