@@ -9,6 +9,9 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Factory\AppFactory;
 use Slim\Psr7\Response;
 
+use App\GraphQL\Boilerplate\Endpoint;
+use App\GraphQL\Exception\GenericGraphQlException;
+
 // Create Container using PHP-DI
 $container = new Container();
 
@@ -50,6 +53,30 @@ $app->add(function (Request $request, RequestHandler $handler) {
     return $handler->handle($request);
 });
 
+
+// Define Custom JSON Error Handler
+$graphQlErrorHandler = function (
+    Request $request,
+    Throwable $exception,
+    bool $displayErrorDetails,
+    bool $logErrors,
+    bool $logErrorDetails,
+    ?LoggerInterface $logger = null
+) use ($app) {
+    if (isset($logger)) {
+        $logger->error($exception->getMessage());
+    }
+    
+    $response = $app->getResponseFactory()->createResponse();
+    $output = Endpoint::generateOutputError([$exception]);
+    $httpCode = 500;
+    if ($exception instanceof GenericGraphQlException) {
+        $httpCode = $exception->isHttpCode ? $exception->getCode() : $httpCode;
+    }
+    $response = Endpoint::setupResponse($response, $output, $httpCode);
+    return $response;
+};
+
 /**
  * The routing middleware should be added earlier than the ErrorMiddleware
  * Otherwise exceptions thrown from it will not be handled by the middleware
@@ -64,7 +91,10 @@ $app->add(function (Request $request, RequestHandler $handler) {
  * Note: This middleware should be added last. It will not handle any exceptions/errors
  * for middleware added after it.
  */
-$errorMiddleware = $app->addErrorMiddleware(true, true, true, $logger);
+$errorMiddleware = $app->addErrorMiddleware(true, true, true); // TODO gql format detection
+$errorMiddleware->setDefaultErrorHandler($graphQlErrorHandler);
+//$errorHandler = $errorMiddleware->getDefaultErrorHandler();
+//$errorHandler->forceContentType('application/json');
 
 // Demo index route
 $app->redirect('/', '/hello', 301);

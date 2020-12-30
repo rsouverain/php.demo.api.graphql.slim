@@ -8,18 +8,17 @@ use App\GraphQL\Boilerplate\FileCollector;
 
 class SchemaLoader extends FileCollector
 {
-    //public function lookup () {
-    //    parent::lookup();
-    //    
-    //    foreach ($this->fileList as &$fileToInclude) {
-    //        if ($fileToInclude['isPHP']) {
-    //            //require_once($fileToInclude['fullPath']);
-    //        }
-    //    }
-    //    //spl_autoload_register(function ($class) use ($this) {
-    //    //    //include 'classes/' . $class . '.class.php';
-    //    //});
-    //    //new Toto();
-    //    return $this;
-    //}
+    public function lookup () {
+        parent::lookup();
+
+        $loaderHash = hash('sha512', serialize($this), false);
+        
+        //foreach ($this->fileList as &$fileToInclude) {
+        //    if ($fileToInclude['isPHP']) {
+        //        //require_once($fileToInclude['fullPath']);
+        //    }
+        //}
+
+        return $this;
+    }
 }

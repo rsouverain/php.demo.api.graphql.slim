@@ -29,7 +29,7 @@ GraphQL is a query language for APIs and a runtime for fulfilling those queries 
 * Powerful developer tools & IDE.
 * Multi language [implementations](https://graphql.org/code/) of the specifications (Node, PHP, ...).
 * Huge developer community and literature.
-* 5 Years of opensource maturity, used by [big names](https://landscape.graphql.org/category=graph-ql-adopter&format=card-mode&grouping=category): Facebook, Github, Pinterest, Airbnb, Atlassian, Rakuten, Twitter, New Relic, Paypal, ...
+* 8 Years of opensource maturity, used by [big names](https://landscape.graphql.org/category=graph-ql-adopter&format=card-mode&grouping=category): Facebook, Github, Pinterest, Airbnb, Atlassian, Rakuten, Twitter, New Relic, Paypal, ...
 
 
 ### Main disadvantages
@@ -68,6 +68,7 @@ When learning all the core concepts of GraphQL, [graphql.org](https://graphql.or
 
 ## Main Concepts
 
+![GraphQL General Architecture](./imgs/gql-general-archi.png "GraphQL General Architecture")
 
 ### Query
 
@@ -258,7 +259,7 @@ A `Resolver` is an algorithm you code to "resolve" the data requested in Queries
 
 
 ---
-Learn everything in more details at graphql.org ! It only takes a very few hours and is more impressive on the listing than on reality.
+Learn everything in more details at graphql.org ! It only takes a very few hours and is more impressive on the listing than in reality.
 
 ## Queries and Mutations
 

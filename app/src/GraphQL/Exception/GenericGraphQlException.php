@@ -2,7 +2,9 @@
 
 namespace App\GraphQL\Exception;
 
-class  GenericGraphQlException extends \Exception
+use GraphQL\Error\ClientAware;
+
+class  GenericGraphQlException extends \Exception implements ClientAware
 {
     public $isHttpCode = false;
     
@@ -11,6 +13,16 @@ class  GenericGraphQlException extends \Exception
     }
 
     public function __toString() {
-        return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
+        return get_class($this) . ": [{$this->code}]: {$this->message}\n";
+    }
+
+    public function isClientSafe()
+    {
+        return true;
+    }
+
+    public function getCategory()
+    {
+        return get_class($this);
     }
 }

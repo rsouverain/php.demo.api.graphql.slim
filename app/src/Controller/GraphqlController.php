@@ -26,12 +26,22 @@ class GraphqlController
     {
         // $this->container->get('');
         return (new Endpoint($response, DebugFlag::INCLUDE_TRACE))
-            ->executeSchema('blog')
+            ->executeSchema([
+                'lookupDirectories' => [
+                    __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'GraphQL'.DIRECTORY_SEPARATOR.'Schema'.DIRECTORY_SEPARATOR.'blog',
+                ],
+                'lookupExtensions'=> ['php'],
+                'isLookupRecursive'=> true,
+                'lookupExcludePaths' => [
+                    __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'GraphQL'.DIRECTORY_SEPARATOR.'Schema'.DIRECTORY_SEPARATOR.'blog'.DIRECTORY_SEPARATOR.'Data',
+                ],
+            ])
         ;
     }
 
     public function refsEndpoint(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
+        throw new \Exception('Not Implemented Yet');
         // your code to access items in the container... $this->container->get('');
         return (new Endpoint($response, DebugFlag::INCLUDE_TRACE))
             ->executeSchema('refs')
