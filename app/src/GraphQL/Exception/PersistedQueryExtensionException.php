@@ -7,7 +7,7 @@ use App\GraphQL\Exception\GenericGraphQlException;
 /**
  * @see https://www.apollographql.com/docs/apollo-server/performance/apq/#verify
  */
-class PersistedQueryExtensionException extends GenericGraphQlException
+class ExtensionException extends GenericGraphQlException
 {
 
     protected $extensions;

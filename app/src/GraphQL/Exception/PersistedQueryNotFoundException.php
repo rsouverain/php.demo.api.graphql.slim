@@ -7,7 +7,7 @@ use App\GraphQL\Exception\GenericGraphQlException;
 /**
  * @see https://www.apollographql.com/docs/apollo-server/performance/apq/#verify
  */
-class PersistedQueryNotFoundException extends PersistedQueryExtensionException
+class PersistedQueryNotFoundException extends ExtensionException
 {
     protected static $extension = 'persistedQuery';
     protected static $name = 'PersistedQueryNotFound';

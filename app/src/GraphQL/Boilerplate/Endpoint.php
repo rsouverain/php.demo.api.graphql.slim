@@ -13,7 +13,7 @@ use GraphQL\Error\DebugFlag;
 use App\GraphQL\Boilerplate\SchemaLoader;
 use App\GraphQL\Boilerplate\AutomaticPersistedQueries;
 use App\GraphQL\Exception\GenericGraphQlException;
-use App\GraphQL\Exception\PersistedQueryExtensionException;
+use App\GraphQL\Exception\ExtensionException;
 
 class Endpoint
 {
@@ -99,7 +99,7 @@ class Endpoint
         foreach ($exceptionList as $ex) {
             $error = null;
             
-            if ($ex instanceof PersistedQueryExtensionException) {
+            if ($ex instanceof ExtensionException) {
                 $error = FormattedError::createFromException($ex, self::$debugFlag);
                 $extensions = array_merge($extensions, $ex->getExtensions());
             }
