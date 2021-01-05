@@ -3,10 +3,10 @@ namespace App\GraphQL\Schema\blog\Type;
 
 use GraphQL\Type\Definition\InterfaceType;
 
-use App\GraphQL\Schemma\blog\Data\Story;
-use App\GraphQL\Schemma\blog\Data\User;
-use App\GraphQL\Schemma\blog\Data\Image;
-use App\GraphQL\Schemma\blog\TypeRepository as Types;
+use App\GraphQL\Schema\blog\Data\Story;
+use App\GraphQL\Schema\blog\Data\User;
+use App\GraphQL\Schema\blog\Data\Image;
+use App\GraphQL\Schema\blog\TypeRegistry as Types;
 
 class NodeType extends InterfaceType
 {

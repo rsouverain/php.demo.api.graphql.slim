@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Boilerplate;
+namespace App\Boilerplate\GraphQL;
 
 use Psr\Http\Message\ResponseInterface;
 
@@ -10,17 +10,33 @@ use GraphQL\Error\Error;
 use GraphQL\Error\FormattedError;
 use GraphQL\Error\DebugFlag;
 
-use App\Boilerplate\GraphQL\SchemaLoader;
-use App\Boilerplate\GraphQL\AutomaticPersistedQueries;
 use App\Boilerplate\GraphQL\Exception\GenericGraphQlException;
 use App\Boilerplate\GraphQL\Exception\ExtensionException;
+use App\Boilerplate\GraphQL\Exception\PersistedQueryNotFoundException;
+use App\Boilerplate\GraphQL\Exception\PersistedQueryNotSupportedException;
 
+
+/**
+ * Class Endpoint
+ * @package App\Boilerplate\GraphQL
+ */
 class Endpoint
 {
+    /** @var null  */
     protected $response;
+
+    /** @var bool  */
     protected $isDebugMode = false;
+
+    /** @var int  */
     protected static $debugFlag = 0;
-    
+
+
+    /**
+     * Endpoint constructor.
+     * @param null $response
+     * @param int $debugFlag
+     */
     public function __construct($response = null, int $debugFlag = 0)
     {
         $this->response = $response;
@@ -31,6 +47,11 @@ class Endpoint
 
     /**
      * Setup the response object or string with your graphql result output.
+     *
+     * @param ResponseInterface|null $response
+     * @param mixed $output
+     * @param int $httpCode
+     * @return false|ResponseInterface|string
      */
     public static function setupResponse ($response, $output, int $httpCode = 200)
     {
@@ -50,6 +71,8 @@ class Endpoint
 
     /**
      * Retrieve input datas to determine the graphql query or mutation employed.
+     *
+     * @return array
      */
     protected function getInputData ()
     {
@@ -69,8 +92,11 @@ class Endpoint
 
     /**
      * errorFormatter is responsible for converting instances of `GraphQL\Error\Error` to an array.
-     * 
+     *
      * @see https://webonyx.github.io/graphql-php/error-handling/
+     * @param Error $error
+     * @return array|mixed[]
+     * @throws \Throwable
      */
     protected function errorFormatter (Error $error) {
         return FormattedError::createFromException($error, self::$debugFlag);
@@ -88,7 +114,7 @@ class Endpoint
 
     /**
      * Utility to generate graphql-compatible formated output errors
-     * 
+     *
      * @see https://webonyx.github.io/graphql-php/error-handling/#errors-in-graphql
      */
     public static function generateOutputError (array $exceptionList, array $extensions = [])
@@ -143,9 +169,14 @@ class Endpoint
         return $output;
     }
 
+    /**
+     * @param array $lookupSchemaOptions
+     * @return \App\Boilerplate\FileCollector|SchemaLoader
+     * @throws Exception\FileNotFoundException
+     * @TODO fix return type to load Schema
+     */
     protected function getSchema (array $lookupSchemaOptions = [])
     {
-        // @TODO refactor use of schemaloader to be outside of Endpoint (Controller?)
         $schemaLoader = new SchemaLoader(
             isset($lookupSchemaOptions['lookupDirectories']) ? (array) $lookupSchemaOptions['lookupDirectories'] : null,
             isset($lookupSchemaOptions['lookupExtensions']) ? (array) $lookupSchemaOptions['lookupExtensions'] : ['php'],
@@ -159,7 +190,7 @@ class Endpoint
             $schemaLoader
                 ->addLookupExclusions([
                     //__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'Schema/blog/Type/StoryType.php',
-                    __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'Schema/blog/Data',
+                    __DIR__ . DIRECTORY_SEPARATOR .DIRECTORY_SEPARATOR.'Schema/blog/Data',
                 ])
             ;
         }
@@ -168,8 +199,15 @@ class Endpoint
 
     /**
      * Executing the stuff required when the endpoint is reached
-     * @param array|null lookupSchemaOptions
+     *
      * @see https://webonyx.github.io/graphql-php/reference/#graphqlserveroperationparams
+     *
+     * @param array|null $lookupSchemaOptions
+     * @return false|ResponseInterface|string|null
+     * @throws PersistedQueryNotFoundException
+     * @throws PersistedQueryNotSupportedException
+     *
+     * @return ResponseInterface
      */
     public function executeSchema(array $lookupSchemaOptions)
     {
@@ -180,6 +218,9 @@ class Endpoint
             (array) $data['extensions'],
             (array) $data['variables'],
         );
+
+        $rootValue = null;
+        $contextValue = null;
 
         try {
             $output = GraphQL
@@ -196,7 +237,7 @@ class Endpoint
             ;
             $httpCode = 200;
         }
-        catch (\GenericGraphQlException $ex) {
+        catch (GenericGraphQlException $ex) {
             $httpCode = $ex->isHttpCode ? $ex->getCode() : 500;
             $output = self::generateOutputError([$ex]);
         }

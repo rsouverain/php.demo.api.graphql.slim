@@ -2,10 +2,23 @@
 
 namespace App\Boilerplate\GraphQL;
 
+/**
+ * Class TypeRegistryAbstract
+ * @package App\Boilerplate\GraphQL
+ */
 abstract class TypeRegistryAbstract
 {
 
-    protected static function byClassName($classname) {
+    /** @var array  */
+    protected static $types = [];
+
+    /**
+     * @param $classname
+     * @return mixed|null
+     * @throws \Exception
+     */
+    protected static function byClassName($classname)
+    {
         $parts = explode('\\', $classname);
         $cacheName = strtolower(preg_replace('~Type$~', '', $parts[count($parts) - 1]));
         $type = null;
@@ -26,6 +39,12 @@ abstract class TypeRegistryAbstract
         return $type;
     }
 
+    /**
+     * @param $shortName
+     * @param bool $removeType
+     * @return mixed|null
+     * @throws \Exception
+     */
     public static function byTypeName($shortName, $removeType=true)
     {
         $cacheName = strtolower($shortName);
@@ -46,6 +65,11 @@ abstract class TypeRegistryAbstract
         return $type;
     }
 
+    /**
+     * @param $classname
+     * @return \Closure|mixed|null
+     * @throws \Exception
+     */
     public static function get($classname)
     {
         return static::LAZY_LOAD_GRAPHQL_TYPES ? function() use ($classname) {

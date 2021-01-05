@@ -6,10 +6,17 @@ use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\NonNull;
 use GraphQL\Type\Definition\Type;
 
+/**
+ * Class TypeRegistryDefault
+ * @package App\Boilerplate\GraphQL
+ */
 class TypeRegistryDefault extends TypeRegistryAbstract
 {
     // Let's add internal types as well for consistent experience
 
+    /**
+     * @return \GraphQL\Type\Definition\ScalarType
+     */
     public static function boolean()
     {
         return Type::boolean();

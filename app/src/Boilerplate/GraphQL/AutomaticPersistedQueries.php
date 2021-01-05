@@ -9,29 +9,40 @@ use App\Boilerplate\GraphQL\Exception\PersistedQueryNotFoundException;
 
 /**
  * Improve network performance by sending smaller requests
- * 
+ *
  * With Automatic Persisted Queries, the ID is a deterministic hash
  * of the input query, so we don't need a complex build step to share the ID between clients and servers.
  * If a server doesn't know about a given hash, the client can expand the query for it;
  * The server caches that mapping.
  * 
  * @see https://www.apollographql.com/docs/apollo-server/performance/apq/
+ * @package App\Boilerplate\GraphQL
  */
 class AutomaticPersistedQueries
 {
 
+    /** @var string  */
     protected static $extensionName = 'persistedQuery';
+    /** @var string  */
     protected static $cacheKeyPrefix = 'graphQL_APQ';
+    /** @var bool  */
     public $isEnabled;
 
-    public function __construct($cacheTTL = 300)
+    /**
+     * AutomaticPersistedQueries constructor.
+     */
+    public function __construct()
     {
         $this->isEnabled = true; // @TODO: optionize
     }
 
-
     /**
+     * @param null $query
+     * @param null $extensions
+     * @param null $variables
      * @return bool|string Boolean indicates if is cached, string is the gql query
+     * @throws PersistedQueryNotFoundException
+     * @throws PersistedQueryNotSupportedException
      */
     public function onRequestRecieved ($query = null, $extensions = null, $variables = null)
     {
@@ -59,16 +70,28 @@ class AutomaticPersistedQueries
         return $persistedQuery;
     }
 
+    /**
+     * @param array $extensions
+     * @return bool
+     */
     private function hasCurrentExtension (array $extensions)
     {
         return in_array(self::$extensionName, $extensions);
     }
 
+    /**
+     * @param array $extensions
+     * @return bool
+     */
     private function hasQueryHash (array $extensions)
     {
         return ($this->hasCurrentExtension($extensions) && isset($extensions[self::$extensionName]['sha256Hash']));
     }
 
+    /**
+     * @param array $extensions
+     * @return mixed|null
+     */
     private function getQueryHash (array $extensions)
     {
         if ($this->hasQueryHash($extensions)) {
@@ -77,6 +100,10 @@ class AutomaticPersistedQueries
         return null;
     }
 
+    /**
+     * @param string $queryHash
+     * @return string
+     */
     private function generateCacheKey (string $queryHash)
     {
         return '${self::$cacheKeyPrefix}_${queryHash}';
@@ -99,7 +126,11 @@ class AutomaticPersistedQueries
         }
         return true;
     }
-    
+
+    /**
+     * @param string $queryHash
+     * @return string|null
+     */
     private function lookupQueryCacheByHash (string $queryHash)
     {
         // @TODO: Improve logs on failure

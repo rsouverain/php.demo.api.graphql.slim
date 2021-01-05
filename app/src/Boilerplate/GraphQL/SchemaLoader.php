@@ -2,13 +2,20 @@
 
 namespace App\Boilerplate\GraphQL;
 
-use App\Boilerplate\GraphQL\Exception\FileNotFoundException;
 use App\Boilerplate\FileCollector;
 
-
+/**
+ * Class SchemaLoader
+ * @package App\Boilerplate\GraphQL
+ */
 class SchemaLoader extends FileCollector
 {
 
+    /**
+     * @param bool $isNamespacedSchema
+     * @return $this|FileCollector
+     * @throws Exception\FileNotFoundException
+     */
     public function lookup ($isNamespacedSchema = false) {
         parent::lookup();
 

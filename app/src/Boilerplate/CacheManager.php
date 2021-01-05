@@ -4,7 +4,10 @@ namespace App\Boilerplate;
 
 // use Symfony\Component\Cache\Adapter\FilesystemAdapter; // @see https://symfony.com/doc/current/components/cache/adapters/filesystem_adapter.html
 use Symfony\Component\Cache\Adapter\AbstractAdapter;
-use Symfony\Component\Cache\Adapter\RedisAdapter; // @see https://symfony.com/doc/current/components/cache/adapters/redis_adapter.html
+
+// @see https://symfony.com/doc/current/components/cache/adapters/redis_adapter.html
+use Symfony\Component\Cache\Adapter\RedisAdapter;
+
 
 /**
  * PSR-6 Compatible Caching Utility
@@ -34,19 +37,30 @@ use Symfony\Component\Cache\Adapter\RedisAdapter; // @see https://symfony.com/do
     // retrieve the value stored by the item
     $value = $foo->get();
  * 
+ * @package App\Boilerplate
  */
 class CacheManager
 {
 
     // protected $instanceId;
+
+    /** @var  */
     protected static $instance;
 
+    /** @var \Redis|\RedisCluster|\Predis\ClientInterface  */
     protected $redisClient = null;
+
+    /** @var RedisAdapter|null  */
     protected $redisAdapter = null;
-    
+
+    /** @var string  */
     protected $cacheKeyPrefix = '';
 
-    public static function defaultOptions () {
+    /**
+     * @return array
+     */
+    public static function defaultOptions ()
+    {
         return [
             // Enables or disables compression of items. This requires phpredis v4 or higher with LZF support enabled.
             'compression' => true,
@@ -74,6 +88,10 @@ class CacheManager
         ];
     }
 
+    /**
+     * CacheManager constructor.
+     * @param null $cacheKeyPrefix
+     */
     public function __construct($cacheKeyPrefix = null)
     {
         // $this->instanceId = uuid_create(UUID_TYPE_RANDOM); // @see https://symfony.com/blog/introducing-the-new-symfony-uuid-polyfill
@@ -84,6 +102,9 @@ class CacheManager
         }
     }
 
+    /**
+     * @return CacheManager
+     */
     public static function getInstance () {
         if (!self::$instance) {
             self::$instance = new self();
@@ -91,16 +112,31 @@ class CacheManager
         return self::$instance;
     }
 
+    /**
+     * @return AbstractAdapter
+     * @throws \Exception
+     */
     public function adapter () : AbstractAdapter
     {
         return $this->getRedisAdapter();
     }
 
+    /**
+     * @param $invoked
+     * @return AbstractAdapter
+     * @throws \Exception
+     */
     public function __invoke($invoked) : AbstractAdapter
     {
         return $this->adapter();
     }
 
+    /**
+     * @param $name
+     * @param array $arguments
+     * @return mixed
+     * @throws \Exception
+     */
     public function __call($name, $arguments = [])
     {
         if (!isset($arguments) || !is_array($arguments)) {
@@ -109,6 +145,11 @@ class CacheManager
         return call_user_func_array([$this->adapter(), $name], $arguments);
     }
 
+    /**
+     * @param string $prefix
+     * @param bool $isAppendMode
+     * @return $this
+     */
     public function setCacheKeyPrefix (string $prefix, bool $isAppendMode = true)
     {
         if ($isAppendMode) {
@@ -120,6 +161,11 @@ class CacheManager
         return $this;
     }
 
+    /**
+     * @param RedisAdapter $adapter
+     * @return $this
+     * @throws \Exception
+     */
     public function setRedisAdapter (RedisAdapter $adapter)
     {
         if ($this->redisAdapter !== null) {
@@ -128,7 +174,12 @@ class CacheManager
         $this->redisAdapter = $adapter;
         return $this;
     }
-    
+
+    /**
+     * @param \Symfony\Component\Cache\Traits\RedisProxy $client
+     * @return $this
+     * @throws \Exception
+     */
     public function setRedisClient (\Symfony\Component\Cache\Traits\RedisProxy  $client)
     {
         if ($this->redisClient !== null || $this->redisAdapter !== null) {
@@ -138,6 +189,12 @@ class CacheManager
         return $this;
     }
 
+    /**
+     * @param null $dsn
+     * @param null $options
+     * @return \Symfony\Component\Cache\Traits\RedisProxy
+     * @throws \Exception
+     */
     protected function getRedisClient ($dsn = null, $options = null) : \Symfony\Component\Cache\Traits\RedisProxy
     {
         // pass a single DSN string to register a single server with the client
@@ -155,6 +212,10 @@ class CacheManager
         return $this->redisClient;
     }
 
+    /**
+     * @return RedisAdapter
+     * @throws \Exception
+     */
     protected function getRedisAdapter () : RedisAdapter
     {
         // pass a single DSN string to register a single server with the client

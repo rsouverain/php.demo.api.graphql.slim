@@ -21,15 +21,26 @@ use App\Boilerplate\FileCollector;
 class OpcacheManager
 {
 
+    /** @var OpcacheManager|null */
     protected static $mainInstance;
 
+    /** @var string  */
     public $filepath;
+
+    /**
+     * OpcacheManager constructor.
+     * @param string $filepath
+     * @param string $fileEsension
+     */
     public function __construct(string $filepath = './cache/', $fileEsension = 'opcache')
     {
         $this->filepath = $filepath;
         $this->fileExtension = $fileEsension;
     }
 
+    /**
+     * @return OpcacheManager|null
+     */
     public static function getInstance () {
         if (!self::$mainInstance) {
             self::$mainInstance = new self();
@@ -38,7 +49,10 @@ class OpcacheManager
     }
 
     /**
+     * @param string $key
      * @param array|object $val
+     * @return bool
+     * @throws \Exception
      */
     public function set(string $key, $val) {
         if (strpos($key, '.') !== false) {
@@ -50,19 +64,33 @@ class OpcacheManager
         $tmp = $path.uniqid('', false).uniqid('-', false).".$this->fileExtension.tmp";
         $isFilePut = file_put_contents($tmp, '<?php $val = ' . $contentValue . ';', LOCK_EX);
         rename($tmp, $path.".$this->fileExtension");
-        return $fileput !== false;
+        return $isFilePut !== false;
     }
-    
-    public function get($key) {
+
+    /**
+     * @param string $key
+     * @return null
+     */
+    public function get(string $key) {
         @include("$this->filepath$key.$this->fileExtension");
         // $val is written in the cache file
         return isset($val) ? $val : null;
     }
 
-    public function delete($key) {
+    /**
+     * @param string $key
+     * @return bool
+     */
+    public function delete(string $key) {
         return unlink("$this->filepath$key.$this->fileExtension");
     }
 
+    /**
+     * @param bool $clearNonTemporary
+     * @param bool $clearTemporary
+     * @return array
+     * @throws GraphQL\Exception\FileNotFoundException
+     */
     protected function removeFiles(bool $clearNonTemporary = true, bool $clearTemporary = true) {
         $lookupExtensions = [];
         if ($clearNonTemporary) {
@@ -94,16 +122,28 @@ class OpcacheManager
         return $result;
     }
 
+    /**
+     * @return array
+     * @throws GraphQL\Exception\FileNotFoundException
+     */
     public function clearAll ()
     {
         return $this->removeFiles(true, true);
     }
 
+    /**
+     * @return array
+     * @throws GraphQL\Exception\FileNotFoundException
+     */
     public function clearTemporary ()
     {
         return $this->removeFiles(false, true);
     }
 
+    /**
+     * @return array
+     * @throws GraphQL\Exception\FileNotFoundException
+     */
     public function clearNonTemporary ()
     {
         return $this->removeFiles(true, false);

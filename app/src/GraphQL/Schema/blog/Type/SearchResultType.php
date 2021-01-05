@@ -3,9 +3,9 @@ namespace App\GraphQL\Schema\blog\Type;
 
 use GraphQL\Type\Definition\UnionType;
 
-use App\GraphQL\Schemma\blog\Data\Story;
-use App\GraphQL\Schemma\blog\Data\User;
-use App\GraphQL\Schemma\blog\TypeRepository as Types;
+use App\GraphQL\Schema\blog\Data\Story;
+use App\GraphQL\Schema\blog\Data\User;
+use App\GraphQL\Schema\blog\TypeRegistry as Types;
 
 class SearchResultType extends UnionType
 {

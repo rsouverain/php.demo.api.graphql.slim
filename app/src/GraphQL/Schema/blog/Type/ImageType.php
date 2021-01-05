@@ -4,9 +4,9 @@ namespace App\GraphQL\Schema\blog\Type;
 use GraphQL\Type\Definition\EnumType;
 use GraphQL\Type\Definition\ObjectType;
 
-use App\GraphQL\Schemma\blog\AppContext;
-use App\GraphQL\Schemma\blog\Data\Image;
-use App\GraphQL\Schemma\blog\TypeRepository as Types;
+use App\GraphQL\Schema\blog\AppContext;
+use App\GraphQL\Schema\blog\Data\Image;
+use App\GraphQL\Schema\blog\TypeRegistry as Types;
 
 class ImageType extends ObjectType
 {

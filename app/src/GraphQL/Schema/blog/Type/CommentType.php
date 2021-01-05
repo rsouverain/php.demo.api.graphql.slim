@@ -4,10 +4,10 @@ namespace App\GraphQL\Schema\blog\Type;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 
-use App\GraphQL\Schemma\blog\AppContext;
-use App\GraphQL\Schemma\blog\Data\Comment;
-use App\GraphQL\Schemma\blog\Data\DataSource;
-use App\GraphQL\Schemma\blog\TypeRepository as Types;
+use App\GraphQL\Schema\blog\AppContext;
+use App\GraphQL\Schema\blog\Data\Comment;
+use App\GraphQL\Schema\blog\Data\DataSource;
+use App\GraphQL\Schema\blog\TypeRegistry as Types;
 
 
 class CommentType extends ObjectType

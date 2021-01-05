@@ -7,15 +7,29 @@ use App\Boilerplate\GraphQL\Exception\FileNotFoundException;
 class FileCollector
 {
 
+    /** @var  */
     protected $lookupDirectories;
+    /** @var array  */
     protected $lookupExtensions;
+    /** @var array  */
     protected $lookupExclusionFiles;
+    /** @var array  */
     protected $lookupExclusionDirectories;
+    /** @var bool  */
     protected $isLookupRecursive = true;
+    /** @var string  */
     protected $dirSeparator;
+    /** @var array  */
     protected $fileList = [];
 
-    public function __construct($lookupDirectories, array $lookupExtensions = ['php'], bool $isLookupRecursive = true) {
+    /**
+     * FileCollector constructor.
+     * @param $lookupDirectories
+     * @param array $lookupExtensions
+     * @param bool $isLookupRecursive
+     */
+    public function __construct($lookupDirectories, array $lookupExtensions = ['php'], bool $isLookupRecursive = true)
+    {
         $this->lookupDirectories = $lookupDirectories;
         $this->isLookupRecursive = $isLookupRecursive;
         $this->lookupExtensions = $lookupExtensions;
@@ -25,6 +39,9 @@ class FileCollector
         $this->fileList = [];
     }
 
+    /**
+     * @return array
+     */
     public function getFileList ()
     {
         return $this->fileList;
@@ -32,8 +49,9 @@ class FileCollector
 
     /**
      * Excludes files ot directories from being looked-up
-     * 
-     * @param {array} $excludes array of file path or directory path. Directories are automatically recursive in their exclusion and will not include any file under it.
+     *
+     * @param array $excludePaths array of file path or directory path. Directories are automatically recursive in their exclusion and will not include any file under it.
+     * @return $this
      */
     public function addLookupExclusions(array $excludePaths) {
         foreach ($excludePaths as $exclude) {
@@ -52,6 +70,8 @@ class FileCollector
      * Synchronously Start looking up for files that are matching our lookup criterias.
      * Results found in $this->fileList
      * @todo cache filestructure
+     * @return $this
+     * @throws FileNotFoundException
      */
     public function lookup () {
         if (is_array($this->lookupDirectories)) {
@@ -67,6 +87,10 @@ class FileCollector
     }
 
 
+    /**
+     * @param $fileInfo
+     * @return bool
+     */
     protected function isFileExcluded ($fileInfo) : bool
     {
         $isExcluded = false;
@@ -87,7 +111,11 @@ class FileCollector
 
         return $isExcluded;
     }
-    
+
+    /**
+     * @param $filepath
+     * @return array
+     */
     protected function getFileInfo ($filepath) : array
     {
         $filepath = realpath($filepath);
@@ -112,12 +140,16 @@ class FileCollector
 
     /**
      * Building a file list, recursivly or not.
+     *
+     * @param string $path
+     * @return $this
+     * @throws FileNotFoundException
      */
     protected function listFilesInPath (string $path)
     {
         $realpath = realpath($path);
         
-        if (!$isRecursive && !is_dir($realpath)) {
+        if ($this->isLookupRecursive && !is_dir($realpath)) {
             throw new FileNotFoundException($realpath);
         }
 

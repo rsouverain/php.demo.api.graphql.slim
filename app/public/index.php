@@ -9,7 +9,7 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Factory\AppFactory;
 use Slim\Psr7\Response;
 
-use App\Boilerplate\Endpoint;
+use App\Boilerplate\GraphQL\Endpoint;
 use App\Boilerplate\GraphQL\Exception\GenericGraphQlException;
 
 // Create Container using PHP-DI

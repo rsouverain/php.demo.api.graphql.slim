@@ -32,7 +32,6 @@ use App\GraphQL\Schema\blog\Type\ImageType;
  */
 class TypeRegistry extends TypeRegistryDefault
 {
-    private static $types = [];
     const LAZY_LOAD_GRAPHQL_TYPES = true;
 
     public static function user() : callable { return static::get(UserType::class); }
