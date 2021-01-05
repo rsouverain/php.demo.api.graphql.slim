@@ -1,14 +1,15 @@
 <?php
 
-namespace App\GraphQL\Boilerplate;
+namespace App\Boilerplate\GraphQL;
 
-use App\GraphQL\Exception\FileNotFoundException;
-use App\GraphQL\Boilerplate\FileCollector;
+use App\Boilerplate\GraphQL\Exception\FileNotFoundException;
+use App\Boilerplate\FileCollector;
 
 
 class SchemaLoader extends FileCollector
 {
-    public function lookup () {
+
+    public function lookup ($isNamespacedSchema = false) {
         parent::lookup();
 
         $loaderHash = hash('sha512', serialize($this), false);

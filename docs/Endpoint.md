@@ -2,7 +2,7 @@
 
 ## Namespace
 
-`App\GraphQL\Boilerplate\Endpoint`
+`App\Boilerplate\Endpoint`
 
 ## Description
 

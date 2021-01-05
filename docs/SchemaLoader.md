@@ -2,7 +2,7 @@
 
 ## Namespace
 
-`App\GraphQL\Boilerplate\SchemaLoader`
+`App\Boilerplate\GraphQL\SchemaLoader`
 
 ## Description
 

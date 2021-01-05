@@ -1,8 +1,8 @@
 <?php
 
-namespace App\GraphQL\Boilerplate;
+namespace App\Boilerplate;
 
-use App\GraphQL\Exception\FileNotFoundException;
+use App\Boilerplate\GraphQL\Exception\FileNotFoundException;
 
 class FileCollector
 {
@@ -23,6 +23,11 @@ class FileCollector
         $this->lookupExclusionDirectories = [];
         $this->dirSeparator = DIRECTORY_SEPARATOR;
         $this->fileList = [];
+    }
+
+    public function getFileList ()
+    {
+        return $this->fileList;
     }
 
     /**
@@ -46,14 +51,17 @@ class FileCollector
     /**
      * Synchronously Start looking up for files that are matching our lookup criterias.
      * Results found in $this->fileList
+     * @todo cache filestructure
      */
     public function lookup () {
-        foreach ($this->lookupDirectories as $lookupDir) {
-            $realPath = realpath($lookupDir);
-            if (!file_exists($realPath)) {
-                throw new FileNotFoundException($lookupDir, 'Lookup Directory Not Found');
+        if (is_array($this->lookupDirectories)) {
+            foreach ($this->lookupDirectories as $lookupDir) {
+                $realPath = realpath($lookupDir);
+                if (!file_exists($realPath)) {
+                    throw new FileNotFoundException($lookupDir, 'Lookup Directory Not Found');
+                }
+                $this->listFilesInPath($realPath);
             }
-            $this->listFilesInPath($realPath);
         }
         return $this;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Boilerplate;
+namespace App\Boilerplate;
 
 use Psr\Http\Message\ResponseInterface;
 
@@ -10,10 +10,10 @@ use GraphQL\Error\Error;
 use GraphQL\Error\FormattedError;
 use GraphQL\Error\DebugFlag;
 
-use App\GraphQL\Boilerplate\SchemaLoader;
-use App\GraphQL\Boilerplate\AutomaticPersistedQueries;
-use App\GraphQL\Exception\GenericGraphQlException;
-use App\GraphQL\Exception\ExtensionException;
+use App\Boilerplate\GraphQL\SchemaLoader;
+use App\Boilerplate\GraphQL\AutomaticPersistedQueries;
+use App\Boilerplate\GraphQL\Exception\GenericGraphQlException;
+use App\Boilerplate\GraphQL\Exception\ExtensionException;
 
 class Endpoint
 {
@@ -163,7 +163,7 @@ class Endpoint
                 ])
             ;
         }
-        return $schemaLoader->lookup();
+        return $schemaLoader->lookup(false);
     }
 
     /**

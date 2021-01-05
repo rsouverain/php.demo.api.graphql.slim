@@ -1,8 +1,6 @@
 <?php
 
-namespace App\GraphQL\Exception;
-
-use App\GraphQL\Exception\GenericGraphQlException;
+namespace App\Boilerplate\GraphQL\Exception;
 
 /**
  * @see https://github.com/apollographql/apollo-link-persisted-queries

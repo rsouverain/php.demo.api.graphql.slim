@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Boilerplate;
+namespace App\Boilerplate\GraphQL;
 
 abstract class TypeRegistryAbstract
 {

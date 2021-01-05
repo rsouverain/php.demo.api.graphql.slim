@@ -1,6 +1,6 @@
 <?
 
-namespace App\GraphQL\Boilerplate;
+namespace App\Boilerplate;
 
 // use Symfony\Component\Cache\Adapter\FilesystemAdapter; // @see https://symfony.com/doc/current/components/cache/adapters/filesystem_adapter.html
 use Symfony\Component\Cache\Adapter\AbstractAdapter;
@@ -14,7 +14,7 @@ use Symfony\Component\Cache\Adapter\RedisAdapter; // @see https://symfony.com/do
  * @usage
  * 
     // With Symfony Contracts...
-    use App\GraphQL\Boilerplate\CacheManager;
+    use App\Boilerplate\CacheManager;
     $memoization = CacheManager::getInstance();
     $value = $memoization->get('FOO', function (\Symfony\Contracts\Cache\ItemInterface $item) {
         $item->expiresAfter(10); //seconds 

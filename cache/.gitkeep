@@ -1,0 +1,1 @@
+# This file will allow to git commit an empty directory, given the proper rule exists in .gitignore

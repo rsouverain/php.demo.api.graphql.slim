@@ -1,8 +1,6 @@
 <?php
 
-namespace App\GraphQL\Exception;
-
-use App\GraphQL\Exception\GenericGraphQlException;
+namespace App\Boilerplate\GraphQL\Exception;
 
 /**
  * @see https://www.apollographql.com/docs/apollo-server/performance/apq/#verify

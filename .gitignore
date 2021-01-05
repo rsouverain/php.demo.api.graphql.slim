@@ -11,3 +11,7 @@
 
 # Embedded web-server pid file
 /.web-server-pid
+
+# Cache folder
+/cache/*
+!/cache/.gitkeep

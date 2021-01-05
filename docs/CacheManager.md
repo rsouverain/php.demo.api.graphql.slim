@@ -2,7 +2,7 @@
 
 ## Namespace
 
-`App\GraphQL\Boilerplate\CacheManager`
+`App\Boilerplate\CacheManager`
 
 ## Description
 
@@ -17,7 +17,7 @@ The basic use will be to store key/value pairs with a Time To Live (TTL) expirat
 * [Read more](https://symfony.com/doc/current/components/cache.html#cache-contracts)
 
 ```php
-use App\GraphQL\Boilerplate\CacheManager;
+use App\Boilerplate\CacheManager;
 $memoization = CacheManager::getInstance();
 $value = $memoization->get('FOO', function (\Symfony\Contracts\Cache\ItemInterface $item) {
     $item->expiresAfter(10); //seconds 

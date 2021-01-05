@@ -11,7 +11,7 @@ use GraphQL\Type\Schema;
 use GraphQL\Error\DebugFlag;
 use GraphQL\Error\FormattedError;
 
-use App\GraphQL\Boilerplate\Endpoint;
+use App\Boilerplate\Endpoint;
 
 class GraphqlController
 {

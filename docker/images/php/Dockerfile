@@ -23,6 +23,11 @@ RUN apt-get update && apt-get install -y \
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+
+# Install PHP OPCache
+RUN docker-php-ext-configure opcache --enable-opcache \
+    && docker-php-ext-install opcache
+
 # Install PHP extensions
 RUN pecl install -o -f yaml \
     && docker-php-ext-enable yaml

@@ -8,7 +8,7 @@ use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\NonNull;
 use GraphQL\Type\Definition\Type;
 
-use App\GraphQL\Boilerplate\TypeRegistryDefault;
+use App\Boilerplate\GraphQL\TypeRegistryDefault;
 
 use App\GraphQL\Schema\_common\Type\Scalar\UrlType;
 use App\GraphQL\Schema\_common\Type\Scalar\EmailType;

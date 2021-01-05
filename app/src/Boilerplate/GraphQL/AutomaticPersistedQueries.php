@@ -1,11 +1,11 @@
 <?
 
-namespace App\GraphQL\Boilerplate;
+namespace App\Boilerplate\GraphQL;
 
-use App\GraphQL\Boilerplate\CacheManager;
+use App\Boilerplate\CacheManager;
 
-use App\GraphQL\Exception\PersistedQueryNotSupportedException;
-use App\GraphQL\Exception\PersistedQueryNotFoundException;
+use App\Boilerplate\GraphQL\Exception\PersistedQueryNotSupportedException;
+use App\Boilerplate\GraphQL\Exception\PersistedQueryNotFoundException;
 
 /**
  * Improve network performance by sending smaller requests

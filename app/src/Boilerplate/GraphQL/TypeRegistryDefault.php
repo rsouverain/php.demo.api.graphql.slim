@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Boilerplate;
+namespace App\Boilerplate\GraphQL;
 
 use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\NonNull;
