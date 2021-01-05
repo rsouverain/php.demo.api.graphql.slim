@@ -1,11 +1,14 @@
+# OpcacheManager
 
-# OPcache
+## Namespace
 
-From article "[500X Faster Caching than Redis/Memcache/APC in PHP](https://medium.com/@dylanwenzlau/500x-faster-caching-than-redis-memcache-apc-in-php-hhvm-dcd26e8447ad)"
+`App\Boilerplate\OpcacheManager`
 
-* [Read about OPcache at PHP.net](https://www.php.net/manual/en/intro.opcache.php)
+## Description
 
-## Introduction
+
+
+This class is an utility giving the developer an actionable API to interact with a performent caching mechanism using php's OPcache.
 
 OPcache improves PHP performance by storing precompiled script bytecode in shared memory, thereby removing the need for PHP to load and parse scripts on each request.
 
@@ -14,6 +17,9 @@ The core of the technique is leveraging the PHP engine’s in-memory file cachin
 The reason this method is faster than Redis, Memcache, APC, and other PHP caching solutions is the fact that all those solutions must serialize and unserialize objects, generally using PHP’s serialize or json_encode functions. By storing PHP objects in file cache memory across requests, we can avoid serialization completely!
 
 :warning: Keep in mind that PHP file caching should primarily be used for **arrays** & **objects**, not strings, since there is no performance benefit for strings. In fact, APC is a tad bit faster when dealing with short strings, due to the slight overhead of calling PHP’s include() function.
+
+* [500X Faster Caching than Redis/Memcache/APC in PHP](https://medium.com/@dylanwenzlau/500x-faster-caching-than-redis-memcache-apc-in-php-hhvm-dcd26e8447ad)
+* [Read more about OPcache at PHP.net](https://www.php.net/manual/en/intro.opcache.php)
 
 ## Production Implementation
 
@@ -41,33 +47,40 @@ opcache.enable_cli=1
 
 If you want to use OPcache with » Xdebug, you must load OPcache before Xdebug.
 
-## Functions
-
-```php
-function cache_set($key, $val, $filepath = '/tmp/') {
-    $path = "$filepath$key";
-    $contentValue = var_export($val, true);
-    $contentValue = str_replace('stdClass::__set_state', '(object)', $contentValue);
-    $tmp = $path.uniqid('', true).'.opcache.tmp';
-    $isFilePut = file_put_contents($tmp, '<?php $val = ' . $contentValue . ';', LOCK_EX);
-    rename($tmp, $path.'.opcache');
-    return $fileput !== false;
-}
-
-function cache_get($key, $filepath = '/tmp/') {
-    @include("$filepath$key.opcache");
-    // $val is written in the cache file
-    return isset($val) ? $val : false;
-}
-```
 
 ## Usage
 
-Now let’s store a value in both our PHP file cache and in APC to compare:
-
+Instantiate:
 ```php
-$data = array_fill(0, 1000000, 'hello'); // some application data here
-cache_set('my_key', $data);
-cache_get('my_key');
-die('<pre>'.print_r($val, true).'</pre>');
+// main singleton instance
+$opcache = OpcacheManager::getInstance();
+// or custom instance
+$opcache = new OpcacheManager('./cache/', 'opcache');
+```
+
+Create cache files using its cache key as filename, values should be php `object` or `array`:
+```php
+$opcache->set('foo', ['bar']);
+$opcache->set('lorem', ['ipsum']);
+$opcache->set('dolor', ['sit', 'amet']);
+$opcache->delete('foo');
+$opcache->clearAll();
+```
+
+Get file values by its key:
+```php
+$value = $opcache->get('lorem');
+```
+
+remove one file by its key:
+```php
+$isDeleted = $opcache->delete('lorem');
+```
+
+cleanup instantiated cache folder, removing all files:
+```php
+$opcache->clearAll();
+// or
+$opcache->clearTemporary();
+$opcache->clearNonTemporary();
 ```

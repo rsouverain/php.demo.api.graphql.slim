@@ -6,7 +6,7 @@
 
 ## Description
 
-This class is an utility giving the developer an actionnable API to interract with a performent caching mecanism like Redis.
+This class is an utility giving the developer an actionable API to interact with a performent caching mechanism like Redis.
 
 The basic use will be to store key/value pairs with a Time To Live (TTL) expiration time.
 
