@@ -60,7 +60,7 @@ class AutomaticPersistedQueries
 
         if ($query) {
             // A GQL Query is available
-            return $this->setQueryCacheByHash($queryHash, $query);
+            return $this->setQueryCacheByHash($queryHash, $query); // TODO improve sha generation, hack alert
         }
 
         $persistedQuery = $this->lookupQueryCacheByHash($queryHash);

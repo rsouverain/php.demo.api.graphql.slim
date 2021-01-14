@@ -1,6 +1,8 @@
 <?php
 namespace App\GraphQL\Schema\demo\Type;
 
+use App\Boilerplate\GraphQL\Exception\AccessDeniedException;
+use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 
@@ -23,10 +25,16 @@ class QueryType extends ObjectType
                 'fieldWithException' => [
                     'type' => $typeRegistry::string(),
                     'resolve' => function() {
-                        throw new \Exception("Exception message thrown in field resolver");
+                        throw new Error("Exception message thrown in field resolver");
                     }
                 ],
-                'hello' => $typeRegistry::string()
+                'hello' => $typeRegistry::nonNull(
+                    $typeRegistry::listOf(
+                        $typeRegistry::nonNull(
+                            $typeRegistry::string()
+                        )
+                    )
+                ),
             ],
             'resolveField' => function($rootValue, $args, $context, ResolveInfo $info) {
                 return $this->{$info->fieldName}($rootValue, $args, $context, $info);
@@ -36,9 +44,9 @@ class QueryType extends ObjectType
     }
 
 
-    public function hello()
+    public function hello($rootValue, $args, $context, $info)
     {
-        return 'World !';
+        return ["World", "!"];
     }
 
     public function deprecatedField()

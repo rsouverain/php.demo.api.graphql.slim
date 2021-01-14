@@ -206,6 +206,7 @@ class Endpoint
         $contextValue = null;
 
         try {
+            $httpCode = 200;
             $output = GraphQL
                 ::executeQuery(
                     $this->getSchema($lookupSchemaOptions),
@@ -214,8 +215,11 @@ class Endpoint
                     $contextValue,
                     (array) $data['variables']
                 )
-                ->setErrorFormatter(function (Error $error) {
+                ->setErrorFormatter(function (Error $error) use (&$httpCode) {
                     // @see https://webonyx.github.io/graphql-php/error-handling/
+                    if ($error->getPrevious() instanceof GenericGraphQlException && $error->getPrevious()->isHttpCode) {
+                        $httpCode = $error->getPrevious()->getCode();
+                    }
                     return FormattedError::createFromException($error, self::$debugFlag);
                 })
                 ->setErrorsHandler(function (array $errors, callable $formatter) {
@@ -223,7 +227,6 @@ class Endpoint
                 })
                 ->toArray()
             ;
-            $httpCode = 200;
         }
         catch (GenericGraphQlException $ex) {
             $httpCode = $ex->isHttpCode ? $ex->getCode() : 500;

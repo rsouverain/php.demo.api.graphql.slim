@@ -76,6 +76,4 @@ class TypeRegistry extends TypeRegistryDefault
     {
         return HtmlField::build($name, $objectKey);
     }
-
-
 }

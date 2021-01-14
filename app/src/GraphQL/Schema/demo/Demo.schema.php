@@ -12,7 +12,7 @@ return (function () {
      */
     $config = SchemaConfig::create()
         ->setQuery(new QueryType())
-        ->setTypeLoader(function($name) {²
+        ->setTypeLoader(function($name) {
             $typeRegistry = TypeRegistry::getInstance();
             return $typeRegistry->byTypeName($name);
         })

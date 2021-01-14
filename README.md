@@ -94,3 +94,5 @@ Connect to container as CLI (optional)
 # on windows, you may want to consider using the `winpty` command before `docker exec`)
 docker exec -ti gql_slim_api sh
 ```
+
+Don't forgot to create `.env` file
