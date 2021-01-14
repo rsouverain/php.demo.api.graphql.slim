@@ -90,27 +90,6 @@ class Endpoint
         return $data;
     }
 
-    /**
-     * errorFormatter is responsible for converting instances of `GraphQL\Error\Error` to an array.
-     *
-     * @see https://webonyx.github.io/graphql-php/error-handling/
-     * @param Error $error
-     * @return array|mixed[]
-     * @throws \Throwable
-     */
-    protected function errorFormatter (Error $error) {
-        return FormattedError::createFromException($error, self::$debugFlag);
-    }
-    
-    /**
-     * errorHandler is useful for error filtering and logging.
-     * 
-     * @see https://webonyx.github.io/graphql-php/error-handling/
-     */
-    protected function errorHandler (array $errors, callable $formatter) {
-        return array_map($formatter, $errors);
-    }
-
 
     /**
      * Utility to generate graphql-compatible formated output errors
@@ -170,31 +149,35 @@ class Endpoint
     }
 
     /**
-     * @param array $lookupSchemaOptions
-     * @return \App\Boilerplate\FileCollector|SchemaLoader
+     * @param Schema|array $lookupSchemaOptions
+     * @return Schema|null
      * @throws Exception\FileNotFoundException
      * @TODO fix return type to load Schema
      */
-    protected function getSchema (array $lookupSchemaOptions = [])
+    protected function getSchema ($lookupSchemaOptions)
     {
-        $schemaLoader = new SchemaLoader(
-            isset($lookupSchemaOptions['lookupDirectories']) ? (array) $lookupSchemaOptions['lookupDirectories'] : null,
-            isset($lookupSchemaOptions['lookupExtensions']) ? (array) $lookupSchemaOptions['lookupExtensions'] : ['php'],
-            isset($lookupSchemaOptions['isLookupRecursive']) ? (bool) $lookupSchemaOptions['isLookupRecursive'] : true
-        );
-        if (
-            isset($lookupSchemaOptions['lookupExcludePaths'])
-            && is_array($lookupSchemaOptions['lookupExcludePaths'])
-            && count($lookupSchemaOptions['lookupExcludePaths']) > 0
-        ) {
-            $schemaLoader
-                ->addLookupExclusions([
-                    //__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'Schema/blog/Type/StoryType.php',
-                    __DIR__ . DIRECTORY_SEPARATOR .DIRECTORY_SEPARATOR.'Schema/blog/Data',
-                ])
-            ;
+        $schemaLoader = null;
+
+        if (isset($lookupSchemaOptions['schemaFilePath'])) {
+            return require_once($lookupSchemaOptions['schemaFilePath']);
         }
-        return $schemaLoader->lookup(false);
+        elseif (isset($lookupSchemaOptions['lookupDirectories']) || isset($lookupSchemaOptions['lookupExtensions']) || isset($lookupSchemaOptions['isLookupRecursive'])) {
+            $schemaLoader = new SchemaLoader(
+                isset($lookupSchemaOptions['lookupDirectories']) ? (array) $lookupSchemaOptions['lookupDirectories'] : null,
+                isset($lookupSchemaOptions['lookupExtensions']) ? (array) $lookupSchemaOptions['lookupExtensions'] : ['schema.php'],
+                isset($lookupSchemaOptions['isLookupRecursive']) ? (bool) $lookupSchemaOptions['isLookupRecursive'] : false
+            );
+            if (
+                isset($lookupSchemaOptions['lookupExcludePaths'])
+                && is_array($lookupSchemaOptions['lookupExcludePaths'])
+                && count($lookupSchemaOptions['lookupExcludePaths']) > 0
+            ) {
+                $schemaLoader->addLookupExclusions($lookupSchemaOptions['lookupExcludePaths']);
+            }
+            return $schemaLoader->load();
+        }
+
+        return null;
     }
 
     /**
@@ -231,8 +214,13 @@ class Endpoint
                     $contextValue,
                     (array) $data['variables']
                 )
-                ->setErrorFormatter($this->errorFormatter)
-                ->setErrorsHandler($this->errorHandler)
+                ->setErrorFormatter(function (Error $error) {
+                    // @see https://webonyx.github.io/graphql-php/error-handling/
+                    return FormattedError::createFromException($error, self::$debugFlag);
+                })
+                ->setErrorsHandler(function (array $errors, callable $formatter) {
+                    return array_map($formatter, $errors);
+                })
                 ->toArray()
             ;
             $httpCode = 200;

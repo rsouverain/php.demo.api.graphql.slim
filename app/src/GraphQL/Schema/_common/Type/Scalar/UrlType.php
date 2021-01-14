@@ -8,6 +8,10 @@ use GraphQL\Language\AST\StringValueNode;
 use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Utils\Utils;
 
+/**
+ * Class UrlType
+ * @package App\GraphQL\Schema\_common\Type\Scalar
+ */
 class UrlType extends ScalarType
 {
     /**

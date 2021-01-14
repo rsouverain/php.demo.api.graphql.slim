@@ -109,6 +109,7 @@ $app->any('/hello', function (Request $request, ResponseInterface $response, $ar
 });
 
 // Demo graphql endpoints
+$app->any('/graphql/demo', \App\Controller\GraphqlController::class.':demoEndpoint');
 $app->map(['GET', 'POST'], '/graphql/blog', \App\Controller\GraphqlController::class.':blogEndpoint');
 $app->any('/graphql/refs', \App\Controller\GraphqlController::class.':refsEndpoint');
 

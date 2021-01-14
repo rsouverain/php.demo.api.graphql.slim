@@ -7,6 +7,10 @@ use GraphQL\Language\AST\StringValueNode;
 use GraphQL\Type\Definition\CustomScalarType;
 use GraphQL\Utils\Utils;
 
+/**
+ * Class EmailType
+ * @package App\GraphQL\Schema\_common\Type\Scalar
+ */
 class EmailType extends CustomScalarType
 {
     public function __construct(array $config = [])

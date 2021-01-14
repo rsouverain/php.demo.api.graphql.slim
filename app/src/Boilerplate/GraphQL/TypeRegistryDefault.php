@@ -4,7 +4,14 @@ namespace App\Boilerplate\GraphQL;
 
 use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\NonNull;
+
 use GraphQL\Type\Definition\Type;
+use GraphQL\Type\Definition\ScalarType;
+use GraphQL\Type\Definition\IntType;
+use GraphQL\Type\Definition\BooleanType;
+use GraphQL\Type\Definition\FloatType;
+use GraphQL\Type\Definition\IDType;
+use GraphQL\Type\Definition\StringType;
 
 /**
  * Class TypeRegistryDefault
@@ -12,10 +19,19 @@ use GraphQL\Type\Definition\Type;
  */
 class TypeRegistryDefault extends TypeRegistryAbstract
 {
+
+    private static $mainInstance;
+    public static function getInstance () {
+        if (!self::$mainInstance) {
+            self::$mainInstance = new self();
+        }
+        return self::$mainInstance;
+    }
+
     // Let's add internal types as well for consistent experience
 
     /**
-     * @return \GraphQL\Type\Definition\ScalarType
+     * @return BooleanType|ScalarType
      */
     public static function boolean()
     {
@@ -23,7 +39,7 @@ class TypeRegistryDefault extends TypeRegistryAbstract
     }
 
     /**
-     * @return \GraphQL\Type\Definition\FloatType
+     * @return FloatType|ScalarType
      */
     public static function float()
     {
@@ -31,7 +47,7 @@ class TypeRegistryDefault extends TypeRegistryAbstract
     }
 
     /**
-     * @return \GraphQL\Type\Definition\IDType
+     * @return IDType|ScalarType
      */
     public static function id()
     {
@@ -39,7 +55,7 @@ class TypeRegistryDefault extends TypeRegistryAbstract
     }
 
     /**
-     * @return \GraphQL\Type\Definition\IntType
+     * @return IntType|ScalarType
      */
     public static function int()
     {
@@ -47,7 +63,7 @@ class TypeRegistryDefault extends TypeRegistryAbstract
     }
 
     /**
-     * @return \GraphQL\Type\Definition\StringType
+     * @return StringType|ScalarType
      */
     public static function string()
     {

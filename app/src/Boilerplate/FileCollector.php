@@ -39,6 +39,11 @@ class FileCollector
         $this->fileList = [];
     }
 
+    public function getLookupHash ()
+    {
+        return hash('sha256', serialize($this));
+    }
+
     /**
      * @return array
      */

@@ -36,21 +36,14 @@ class GraphqlController
      * @param ResponseInterface $response
      * @param array $args
      * @return ResponseInterface
-     * @throws \Throwable
+     * @throws \App\Boilerplate\GraphQL\Exception\PersistedQueryNotFoundException
+     * @throws \App\Boilerplate\GraphQL\Exception\PersistedQueryNotSupportedException
      */
-    public function blogEndpoint(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    public function demoEndpoint(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
-        // $this->container->get('');
         return (new Endpoint($response, DebugFlag::INCLUDE_TRACE))
             ->executeSchema([
-                'lookupDirectories' => [
-                    __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'GraphQL'.DIRECTORY_SEPARATOR.'Schema'.DIRECTORY_SEPARATOR.'blog',
-                ],
-                'lookupExtensions'=> ['php'],
-                'isLookupRecursive'=> true,
-                'lookupExcludePaths' => [
-                    __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'GraphQL'.DIRECTORY_SEPARATOR.'Schema'.DIRECTORY_SEPARATOR.'blog'.DIRECTORY_SEPARATOR.'Data',
-                ],
+                'schemaFilePath' => __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'GraphQL'.DIRECTORY_SEPARATOR.'Schema'.DIRECTORY_SEPARATOR.'demo'.DIRECTORY_SEPARATOR.'Demo.schema.php',
             ])
         ;
     }
@@ -60,7 +53,25 @@ class GraphqlController
      * @param ResponseInterface $response
      * @param array $args
      * @return ResponseInterface
-     * @throws \Throwable
+     * @throws \App\Boilerplate\GraphQL\Exception\PersistedQueryNotFoundException
+     * @throws \App\Boilerplate\GraphQL\Exception\PersistedQueryNotSupportedException
+     */
+    public function blogEndpoint(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        return (new Endpoint($response, DebugFlag::INCLUDE_TRACE))
+            ->executeSchema([
+                'schemaFilePath' => __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'GraphQL'.DIRECTORY_SEPARATOR.'Schema'.DIRECTORY_SEPARATOR.'blog'.DIRECTORY_SEPARATOR.'Blog.schema.php',
+            ])
+        ;
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @param array $args
+     * @return ResponseInterface
+     * @throws \App\Boilerplate\GraphQL\Exception\PersistedQueryNotFoundException
+     * @throws \App\Boilerplate\GraphQL\Exception\PersistedQueryNotSupportedException
      */
     public function refsEndpoint(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {

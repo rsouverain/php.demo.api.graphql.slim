@@ -32,25 +32,47 @@ use App\GraphQL\Schema\blog\Type\ImageType;
  */
 class TypeRegistry extends TypeRegistryDefault
 {
-    const LAZY_LOAD_GRAPHQL_TYPES = true;
+    public function user () : callable {
+        return $this->get(UserType::class);
+    }
 
-    public static function user() : callable { return static::get(UserType::class); }
-    public static function story() : callable { return static::get(StoryType::class); }
-    public static function comment() : callable { return static::get(CommentType::class); }
-    public static function image() : callable { return static::get(ImageType::class); }
-    public static function node() : callable { return static::get(NodeType::class); }
-    public static function mention() : callable { return static::get(SearchResultType::class); }
-    public static function imageSizeEnum() : callable { return static::get(ImageSizeEnumType::class); }
-    public static function contentFormatEnum() : callable { return static::get(ContentFormatEnum::class); }
-    public static function email() : callable { return static::get(EmailType::class); }
-    public static function url() : callable { return static::get(UrlType::class); }
+    public function story () : callable {
+        return $this->get(StoryType::class);
+    }
 
-    /**
-     * @param $name
-     * @param null $objectKey
-     * @return array
-     */
-    public static function htmlField($name, $objectKey = null)
+    public function comment () : callable {
+        return $this->get(CommentType::class);
+    }
+
+    public function image () : callable {
+        return $this->get(ImageType::class);
+    }
+
+    public function node () : callable {
+        return $this->get(NodeType::class);
+    }
+
+    public function mention () : callable {
+        return $this->get(SearchResultType::class);
+    }
+
+    public function imageSizeEnum () : callable {
+        return $this->get(ImageSizeEnumType::class);
+    }
+
+    public function contentFormatEnum () : callable {
+        return $this->get(ContentFormatEnum::class);
+    }
+
+    public function email () : callable {
+        return $this->get(EmailType::class);
+    }
+
+    public function url () : callable {
+        return $this->get(UrlType::class);
+    }
+
+    public function htmlField ($name, $objectKey = null)
     {
         return HtmlField::build($name, $objectKey);
     }

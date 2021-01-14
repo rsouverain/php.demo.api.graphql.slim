@@ -9,29 +9,32 @@ namespace App\Boilerplate\GraphQL;
 abstract class TypeRegistryAbstract
 {
 
+    /** @var bool  */
+    public $isLazyLoadingGraphqlTypes = true;
+
     /** @var array  */
-    protected static $types = [];
+    protected $types = [];
 
     /**
      * @param $classname
      * @return mixed|null
      * @throws \Exception
      */
-    protected static function byClassName($classname)
+    protected function byClassName($classname)
     {
         $parts = explode('\\', $classname);
         $cacheName = strtolower(preg_replace('~Type$~', '', $parts[count($parts) - 1]));
         $type = null;
 
-        if (!isset(self::$types[$cacheName])) {
+        if (!isset($this->types[$cacheName])) {
             if (class_exists($classname)) {
                 $type = new $classname();
             }
 
-            self::$types[$cacheName] = $type;
+            $this->types[$cacheName] = $type;
         }
 
-        $type = self::$types[$cacheName];
+        $type = $this->types[$cacheName];
 
         if (!$type) {
             throw new \Exception('Unknown graphql type: ' . $classname);
@@ -41,22 +44,21 @@ abstract class TypeRegistryAbstract
 
     /**
      * @param $shortName
-     * @param bool $removeType
      * @return mixed|null
      * @throws \Exception
      */
-    public static function byTypeName($shortName, $removeType=true)
+    public function byTypeName($shortName)
     {
         $cacheName = strtolower($shortName);
         $type = null;
 
-        if (isset(self::$types[$cacheName])) {
-            return self::$types[$cacheName];
+        if (isset($this->types[$cacheName])) {
+            return $this->types[$cacheName];
         }
 
         $method = lcfirst($shortName);
         if(method_exists(get_called_class(), $method)) {
-            $type = self::{$method}();
+            $type = $this->{$method}();
         }
 
         if(!$type) {
@@ -70,10 +72,10 @@ abstract class TypeRegistryAbstract
      * @return \Closure|mixed|null
      * @throws \Exception
      */
-    public static function get($classname)
+    public function get($classname)
     {
-        return static::LAZY_LOAD_GRAPHQL_TYPES ? function() use ($classname) {
-            return static::byClassName($classname);
-        } : static::byClassName($classname);
+        return $this->isLazyLoadingGraphqlTypes ? function() use ($classname) {
+            return $this->byClassName($classname);
+        } : $this->byClassName($classname);
     }
 }
