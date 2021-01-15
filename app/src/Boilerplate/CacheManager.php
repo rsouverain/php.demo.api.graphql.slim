@@ -107,7 +107,7 @@ class CacheManager
      */
     public static function getInstance () {
         if (!self::$instance) {
-            self::$instance = new self();
+            self::$instance = new static();
         }
         return self::$instance;
     }

@@ -2,9 +2,9 @@
 
 namespace App\GraphQL\Schema\_common\Type\Scalar;
 
+use App\Boilerplate\GraphQL\Type\Definition\CustomScalarType;
 use GraphQL\Error\Error;
 use GraphQL\Language\AST\StringValueNode;
-use GraphQL\Type\Definition\CustomScalarType;
 use GraphQL\Utils\Utils;
 
 /**

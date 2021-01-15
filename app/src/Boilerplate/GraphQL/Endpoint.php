@@ -205,6 +205,8 @@ class Endpoint
         $rootValue = null;
         $contextValue = null;
 
+        // $debug = DebugFlag::INCLUDE_DEBUG_MESSAGE | DebugFlag::INCLUDE_TRACE;
+
         try {
             $httpCode = 200;
             $output = GraphQL
@@ -225,7 +227,7 @@ class Endpoint
                 ->setErrorsHandler(function (array $errors, callable $formatter) {
                     return array_map($formatter, $errors);
                 })
-                ->toArray()
+                ->toArray(self::$debugFlag)
             ;
         }
         catch (GenericGraphQlException $ex) {

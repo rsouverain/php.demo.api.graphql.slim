@@ -2,10 +2,10 @@
 
 namespace App\GraphQL\Schema\_common\Type\Scalar;
 
+use App\Boilerplate\GraphQL\Type\Definition\ScalarType;
 use GraphQL\Error\Error;
 use GraphQL\Language\AST\Node;
 use GraphQL\Language\AST\StringValueNode;
-use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Utils\Utils;
 
 /**

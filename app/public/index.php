@@ -108,6 +108,11 @@ $app->any('/hello', function (Request $request, ResponseInterface $response, $ar
     return $response;
 });
 
+$app->any('/info', function (Request $request, ResponseInterface $response, $args) {
+    echo phpinfo();
+    exit;
+});
+
 // Demo graphql endpoints
 $app->any('/graphql/demo', \App\Controller\GraphqlController::class.':demoEndpoint');
 $app->map(['GET', 'POST'], '/graphql/blog', \App\Controller\GraphqlController::class.':blogEndpoint');
