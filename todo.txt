@@ -1,0 +1,9 @@
+
+système utilisateur
+implémenter token JWT
+
+
+graphql/schema/blog -> faire tout fonctionner les exemples
+mettre UUID dans _common/Scalar
+
+TypeRegistry
