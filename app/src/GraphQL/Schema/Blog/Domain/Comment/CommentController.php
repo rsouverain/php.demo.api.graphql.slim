@@ -1,13 +1,13 @@
 <?php
 
 
-namespace App\GraphQL\Schema\blog\Data\comment;
+namespace App\GraphQL\Schema\Blog\Domain\Comment;
 
 
-use App\Blog\Data\Comment\Comment;
-use App\Blog\Data\DataSource;
+use App\GraphQL\Schema\Comment\Comment;
+use App\GraphQL\Schema\BlogDataSource;
 
-class CommentController extends DataSource
+class CommentController extends BlogDataSource
 {
     /**
      * @param integer $id

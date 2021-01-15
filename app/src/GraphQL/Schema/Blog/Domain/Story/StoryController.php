@@ -1,13 +1,13 @@
 <?php
 
 
-namespace App\GraphQL\Schema\blog\Data\story;
+namespace App\GraphQL\Schema\Blog\Domain\Story;
 
 
-use App\Blog\Data\DataSource;
-use App\Blog\Data\Story\Story;
+use App\GraphQL\Schema\Blog\Data\BlogDataSource;
+use App\GraphQL\Schema\Blog\Data\Story;
 
-class StoryController extends DataSource
+class StoryController extends BlogDataSource
 {
     /**
      * @param integer $id

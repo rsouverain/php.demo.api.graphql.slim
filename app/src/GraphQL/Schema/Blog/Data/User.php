@@ -1,7 +1,6 @@
 <?php
-namespace App\Blog\Data\User;
+namespace App\GraphQL\Schema\Blog\Data;
 
-use App\Blog\Data\DataSource;
 use GraphQL\Utils\Utils;
 
 class User

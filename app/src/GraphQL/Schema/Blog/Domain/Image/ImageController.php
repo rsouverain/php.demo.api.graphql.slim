@@ -1,13 +1,12 @@
 <?php
 
 
-namespace App\GraphQL\Schema\blog\Data\image;
+namespace App\GraphQL\Schema\Blog\Domain\image;
 
 
-use App\Blog\Data\DataSource;
-use App\Blog\Data\Image\Image;
-
-class ImageController extends DataSource
+use App\GraphQL\Schema\BlogDataSource;
+use App\GraphQL\Schema\Blog\Data\Image;
+class ImageController extends BlogDataSource
 {
 
     /**

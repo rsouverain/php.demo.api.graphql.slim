@@ -1,10 +1,10 @@
 <?php
 
-namespace App\GraphQL\Schema\blog\Type\Enum;
+namespace App\GraphQL\Schema\Blog\Type\Enum;
 
 use GraphQL\Type\Definition\EnumType;
 
-use App\GraphQL\Schema\blog\Data\Image;
+use App\GraphQL\Schema\Blog\Data\Image;
 
 class ImageSizeEnumType extends EnumType
 {

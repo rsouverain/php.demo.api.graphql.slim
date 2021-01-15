@@ -1,14 +1,14 @@
 <?php
-namespace App\GraphQL\Schema\blog\Type;
+namespace App\GraphQL\Schema\Blog\Domain\Comment;
 
-use App\GraphQL\Schema\blog\Data\user\UserController;
+use App\GraphQL\Schema\Blog\Domain\Comment\CommentController;
+use App\GraphQL\Schema\Blog\Domain\User\UserController;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 
-use App\GraphQL\Schema\blog\AppContext;
-use App\GraphQL\Schema\blog\Data\Comment;
-use App\GraphQL\Schema\blog\Data\DataSource;
-use App\GraphQL\Schema\blog\TypeRegistry as Types;
+use App\GraphQL\Schema\Blog\AppContext;
+use App\GraphQL\Schema\Blog\Data\Comment;
+use App\GraphQL\Schema\Blog\TypeRegistry as Types;
 
 
 class CommentType extends ObjectType
@@ -61,7 +61,7 @@ class CommentType extends ObjectType
     public function resolveParent(Comment $comment)
     {
         if ($comment->parentId) {
-            return DataSource::findComment($comment->parentId);
+            return CommentController::findComment($comment->parentId);
         }
         return null;
     }
@@ -69,11 +69,11 @@ class CommentType extends ObjectType
     public function resolveReplies(Comment $comment, $args)
     {
         $args += ['after' => null];
-        return DataSource::findReplies($comment->id, $args['limit'], $args['after']);
+        return CommentController::findReplies($comment->id, $args['limit'], $args['after']);
     }
 
     public function resolveTotalReplyCount(Comment $comment)
     {
-        return DataSource::countReplies($comment->id);
+        return CommentController::countReplies($comment->id);
     }
 }

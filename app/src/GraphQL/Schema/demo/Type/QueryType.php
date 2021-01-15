@@ -6,7 +6,7 @@ use GraphQL\Error\Error;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 
-use App\GraphQL\Schema\blog\TypeRegistry;
+use App\GraphQL\Schema\Blog\TypeRegistry;
 
 
 class QueryType extends ObjectType

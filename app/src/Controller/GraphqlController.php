@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\GraphQL\Schema\Blog\Data\BlogDataSource;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -58,6 +59,7 @@ class GraphqlController
      */
     public function blogEndpoint(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
+        BlogDataSource::init();
         return (new Endpoint($response, DebugFlag::INCLUDE_TRACE))
             ->executeSchema([
                 'schemaFilePath' => __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'GraphQL'.DIRECTORY_SEPARATOR.'Schema'.DIRECTORY_SEPARATOR.'blog'.DIRECTORY_SEPARATOR.'Blog.schema.php',

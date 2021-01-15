@@ -1,17 +1,14 @@
 <?php
-namespace App\Blog\Data;
+namespace App\GraphQL\Schema\Blog\Data;
 
-use App\Blog\Data\Comment\Comment;
-use App\Blog\Data\Story\Story;
-use App\Blog\Data\User\User;
 
 /**
  * This is just a simple in-memory data holder for the sake of example.
  * Data layer for real app may use Doctrine or query the database directly (e.g. in CQRS style)
  */
-class DataSource
+class BlogDataSource
 {
-    /** @var DataSource|null */
+    /** @var BlogDataSource|null */
     protected static $mainInstance;
 
     /** @var array */
@@ -30,6 +27,7 @@ class DataSource
     public static $storyComments = [];
     public static $commentReplies = [];
     public static $storyMentions = [];
+    public static $storyLikes = [];
 
 
     /**
@@ -42,7 +40,7 @@ class DataSource
 
 
     /**
-     * @return DataSource|null
+     * @return BlogDataSource|null
      */
     public static function getInstance () {
         if (!self::$mainInstance) {

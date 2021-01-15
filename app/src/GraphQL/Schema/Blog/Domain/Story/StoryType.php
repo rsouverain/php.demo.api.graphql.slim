@@ -1,15 +1,16 @@
 <?php
-namespace App\GraphQL\Schema\blog\Type;
+namespace App\GraphQL\Schema\Blog\Domain\Story;
 
+use App\GraphQL\Schema\Blog\Domain\Comment\CommentController;
+use App\GraphQL\Schema\Blog\Domain\User\UserController;
 use GraphQL\Type\Definition\EnumType;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 
-use App\GraphQL\Schema\blog\AppContext;
-use App\GraphQL\Schema\blog\Data\DataSource;
-use App\GraphQL\Schema\blog\Data\Story;
+use App\GraphQL\Schema\Blog\AppContext;
+use App\GraphQL\Schema\Blog\Data\Story;
 
-use App\GraphQL\Schema\blog\TypeRegistry as Types;
+use App\GraphQL\Schema\Blog\TypeRegistry as Types;
 
 class StoryType extends ObjectType
 {
@@ -87,13 +88,13 @@ class StoryType extends ObjectType
 
     public function resolveAuthor(Story $story)
     {
-        return DataSource::findUser($story->authorId);
+        return UserController::findUser($story->authorId);
     }
 
     public function resolveAffordances(Story $story, $args, AppContext $context)
     {
-        $isViewer = $context->viewer === DataSource::findUser($story->authorId);
-        $isLiked = DataSource::isLikedBy($story->id, $context->viewer->id);
+        $isViewer = $context->viewer === UserController::findUser($story->authorId);
+        $isLiked = StoryController::isLikedBy($story->id, $context->viewer->id);
 
         if ($isViewer) {
             $affordances[] = self::EDIT;
@@ -109,29 +110,29 @@ class StoryType extends ObjectType
 
     public function resolveHasViewerLiked(Story $story, $args, AppContext $context)
     {
-        return DataSource::isLikedBy($story->id, $context->viewer->id);
+        return StoryController::isLikedBy($story->id, $context->viewer->id);
     }
 
     public function resolveTotalCommentCount(Story $story)
     {
-        return DataSource::countComments($story->id);
+        return CommentController::countComments($story->id);
     }
 
     public function resolveComments(Story $story, $args)
     {
         $args += ['after' => null];
-        return DataSource::findComments($story->id, $args['limit'], $args['after']);
+        return CommentController::findComments($story->id, $args['limit'], $args['after']);
     }
     
     public function resolveMentions(Story $story, $args, AppContext $context){
-        return DataSource::findStoryMentions($story->id);
+        return StoryController::findStoryMentions($story->id);
     }
 
     public function resolveLikedBy(Story $story, $args, AppContext $context){
-        return DataSource::findLikes($story->id,10);
+        return StoryController::findLikes($story->id,10);
     }
 
     public function resolveLikes(Story $story, $args, AppContext $context){
-        return DataSource::findLikes($story->id,10);
+        return StoryController::findLikes($story->id,10);
     }
 }

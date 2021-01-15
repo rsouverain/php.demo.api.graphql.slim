@@ -1,5 +1,5 @@
 <?php
-namespace App\Blog\Data\Image;
+namespace App\GraphQL\Schema\Blog\Data;
 
 use GraphQL\Utils\Utils;
 

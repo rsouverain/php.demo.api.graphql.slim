@@ -1,11 +1,11 @@
 <?php
-namespace App\GraphQL\Schema\blog\Type;
+namespace App\GraphQL\Schema\Blog\Type;
 
 use GraphQL\Type\Definition\UnionType;
 
-use App\GraphQL\Schema\blog\Data\Story;
-use App\GraphQL\Schema\blog\Data\User;
-use App\GraphQL\Schema\blog\TypeRegistry as Types;
+use App\GraphQL\Schema\Blog\Data\Story\Story;
+use App\GraphQL\Schema\Blog\Data\user\User;
+use App\GraphQL\Schema\Blog\TypeRegistry as Types;
 
 class SearchResultType extends UnionType
 {

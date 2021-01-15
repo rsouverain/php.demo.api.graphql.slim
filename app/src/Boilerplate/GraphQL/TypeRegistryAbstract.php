@@ -26,14 +26,14 @@ abstract class TypeRegistryAbstract
         $cacheName = strtolower(preg_replace('~Type$~', '', $parts[count($parts) - 1]));
         $type = null;
 
+        $class = $classname;
         if (!isset($this->types[$cacheName])) {
-            if (class_exists($classname)) {
+            if (class_exists($class)) {
                 $type = new $classname();
             }
 
             $this->types[$cacheName] = $type;
         }
-
         $type = $this->types[$cacheName];
 
         if (!$type) {

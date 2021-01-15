@@ -1,13 +1,11 @@
 <?php
 
 
-namespace App\GraphQL\Schema\blog\Data\user;
+namespace App\GraphQL\Schema\Blog\Domain\User;
 
+use App\GraphQL\Schema\Blog\Data\BlogDataSource;
 
-use App\Blog\Data\DataSource;
-
-
-class UserController extends DataSource
+class UserController extends BlogDataSource
 {
 
     /**

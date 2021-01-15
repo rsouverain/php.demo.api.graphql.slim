@@ -1,9 +1,9 @@
 <?php
 
-namespace App\GraphQL\Schema\blog\Type\Field;
+namespace App\GraphQL\Schema\Blog\Type\Field;
 
-use App\GraphQL\Schema\blog\Type\Enum\ContentFormatEnum;
-use App\GraphQL\Schema\blog\TypeRegistry as Types;
+use App\GraphQL\Schema\Blog\Type\Enum\ContentFormatEnum;
+use App\GraphQL\Schema\Blog\TypeRegistry as Types;
 
 class HtmlField
 {

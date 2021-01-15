@@ -1,15 +1,16 @@
 <?php
 
-namespace App\GraphQL\Schema\blog\Type;
+namespace App\GraphQL\Schema\Blog\Domain\User;
 
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 
-use App\GraphQL\Schema\blog\AppContext;
-use App\GraphQL\Schema\blog\Data\DataSource;
-use App\GraphQL\Schema\blog\Data\User;
+use App\GraphQL\Schema\Blog\AppContext;
+use App\GraphQL\Schema\Blog\Data\User;
+use App\GraphQL\Schema\Blog\Domain\Image\ImageController;
+use App\GraphQL\Schema\Blog\Domain\Story\StoryController;
 
-use App\GraphQL\Schema\blog\TypeRegistry as Types;
+use App\GraphQL\Schema\Blog\TypeRegistry as Types;
 
 class UserType extends ObjectType
 {
@@ -17,7 +18,7 @@ class UserType extends ObjectType
     {
         $config = [
             'name' => 'User',
-            'description' => 'Our blog authors',
+            'description' => 'Our Blog authors',
             'fields' => function() {
                 return [
                     'id' => Types::id(),
@@ -61,11 +62,11 @@ class UserType extends ObjectType
 
     public function resolvePhoto(User $user, $args)
     {
-        return DataSource::getUserPhoto($user->id, $args['size']);
+        return ImageController::getUserPhoto($user->id, $args['size']);
     }
 
     public function resolveLastStoryPosted(User $user)
     {
-        return DataSource::findLastStoryFor($user->id);
+        return StoryController::findLastStoryFor($user->id);
     }
 }

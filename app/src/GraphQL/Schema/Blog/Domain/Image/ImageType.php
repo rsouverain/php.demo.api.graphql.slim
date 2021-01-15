@@ -1,12 +1,12 @@
 <?php
-namespace App\GraphQL\Schema\blog\Type;
+namespace App\GraphQL\Schema\Blog\Domain\Image;
 
 use GraphQL\Type\Definition\EnumType;
 use GraphQL\Type\Definition\ObjectType;
 
-use App\GraphQL\Schema\blog\AppContext;
-use App\GraphQL\Schema\blog\Data\Image;
-use App\GraphQL\Schema\blog\TypeRegistry as Types;
+use App\GraphQL\Schema\Blog\AppContext;
+use App\GraphQL\Schema\Blog\Data\Image\Image;
+use App\GraphQL\Schema\Blog\TypeRegistry as Types;
 
 class ImageType extends ObjectType
 {
@@ -53,7 +53,7 @@ class ImageType extends ObjectType
     {
         switch ($value->type) {
             case Image::TYPE_USERPIC:
-                $path = "/images/user/{$value->id}-{$value->size}.jpg";
+                $path = "/images/User/{$value->id}-{$value->size}.jpg";
                 break;
             default:
                 throw new \UnexpectedValueException("Unexpected image type: " . $value->type);
