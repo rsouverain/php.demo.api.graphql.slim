@@ -12,14 +12,19 @@ class Image
     const SIZE_MEDIUM = 'medium';
     const SIZE_ORIGINAL = 'original';
 
+    /** @var Integer */
     public $id;
 
+    /** @var String */
     public $type;
 
+    /** @var Integer */
     public $size;
 
+    /** @var Integer */
     public $width;
 
+    /** @var Integer */
     public $height;
 
     public function __construct(array $data)

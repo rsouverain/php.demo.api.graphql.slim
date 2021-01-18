@@ -1,12 +1,11 @@
 <?php
 namespace App\GraphQL\Schema\Blog\Domain\Comment;
 
-use App\GraphQL\Schema\Blog\Domain\Comment\CommentController;
 use App\GraphQL\Schema\Blog\Domain\User\UserController;
+
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 
-use App\GraphQL\Schema\Blog\AppContext;
 use App\GraphQL\Schema\Blog\Data\Comment;
 use App\GraphQL\Schema\Blog\TypeRegistry as Types;
 

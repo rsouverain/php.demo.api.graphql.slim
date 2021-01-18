@@ -72,13 +72,13 @@ class QueryType extends ObjectType
     public function viewer($rootValue, $args)
     {
         return UserController::findUser("1");
-/*        return $context->viewer;*/
+        /*        return $context->viewer;*/
     }
 
     public function stories($rootValue, $args)
     {
         $args += ['after' => null];
-        StoryController::findStories($args['limit'], $args['after']);
+        return StoryController::findStories($args['limit'], $args['after']);
     }
 
     public function lastStoryPosted()
@@ -91,4 +91,5 @@ class QueryType extends ObjectType
     {
         return 'You can request deprecated field, but it is not displayed in auto-generated documentation by default.';
     }
+
 }

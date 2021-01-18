@@ -1,14 +1,14 @@
 <?php
 
 
-namespace App\GraphQL\Schema\Blog\Domain\image;
+namespace App\GraphQL\Schema\Blog\Domain\Image;
 
 
-use App\GraphQL\Schema\BlogDataSource;
+use App\GraphQL\Schema\Blog\Data\BlogDataSource;
 use App\GraphQL\Schema\Blog\Data\Image;
+
 class ImageController extends BlogDataSource
 {
-
     /**
      * @param integer $userId
      * @param integer $size
@@ -24,5 +24,4 @@ class ImageController extends BlogDataSource
             'height' => rand(100, 200)
         ]);
     }
-
 }

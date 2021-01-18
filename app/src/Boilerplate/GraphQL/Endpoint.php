@@ -43,6 +43,7 @@ class Endpoint
         $this->isDebugMode = (bool) ($debugFlag > 0);
         self::$debugFlag = $debugFlag;
         $this->APQ = new AutomaticPersistedQueries(300);
+
     }
 
     /**

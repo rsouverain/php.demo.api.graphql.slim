@@ -5,7 +5,6 @@ namespace App\GraphQL\Schema\Blog\Domain\User;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 
-use App\GraphQL\Schema\Blog\AppContext;
 use App\GraphQL\Schema\Blog\Data\User;
 use App\GraphQL\Schema\Blog\Domain\Image\ImageController;
 use App\GraphQL\Schema\Blog\Domain\Story\StoryController;

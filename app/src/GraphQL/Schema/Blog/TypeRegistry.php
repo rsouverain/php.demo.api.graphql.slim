@@ -13,7 +13,7 @@ use App\Boilerplate\GraphQL\TypeRegistryDefault;
 use App\GraphQL\Schema\_common\Type\Scalar\UrlType;
 use App\GraphQL\Schema\_common\Type\Scalar\EmailType;
 use App\GraphQL\Schema\Blog\Type\Enum\ContentFormatEnum;
-use App\GraphQL\Schema\Blog\Type\Enum\ImageSizeEnumType;
+use App\GraphQL\Schema\Blog\Domain\Image\ImageSizeEnumType;
 
 use App\GraphQL\Schema\Blog\Type\Field\HtmlField;
 use App\GraphQL\Schema\Blog\Type\SearchResultType;

@@ -4,8 +4,7 @@ namespace App\GraphQL\Schema\Blog\Domain\Image;
 use GraphQL\Type\Definition\EnumType;
 use GraphQL\Type\Definition\ObjectType;
 
-use App\GraphQL\Schema\Blog\AppContext;
-use App\GraphQL\Schema\Blog\Data\Image\Image;
+Use App\GraphQL\Schema\Blog\Data\Image;
 use App\GraphQL\Schema\Blog\TypeRegistry as Types;
 
 class ImageType extends ObjectType
@@ -49,7 +48,7 @@ class ImageType extends ObjectType
         parent::__construct($config);
     }
 
-    public function resolveUrl(Image $value, $args, AppContext $context)
+    public function resolveUrl(Image $value, $args, $context)
     {
         switch ($value->type) {
             case Image::TYPE_USERPIC:
@@ -58,6 +57,7 @@ class ImageType extends ObjectType
             default:
                 throw new \UnexpectedValueException("Unexpected image type: " . $value->type);
         }
-        return $context->rootUrl . $path;
+        return $path;
+        /*return $context->rootUrl . $path;*/
     }
 }

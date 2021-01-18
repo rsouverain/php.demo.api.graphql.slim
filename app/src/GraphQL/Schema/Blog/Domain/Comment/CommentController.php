@@ -4,46 +4,25 @@
 namespace App\GraphQL\Schema\Blog\Domain\Comment;
 
 
-use App\GraphQL\Schema\Comment\Comment;
-use App\GraphQL\Schema\BlogDataSource;
+use App\GraphQL\Schema\Blog\Data\BlogDataSource;
 
 class CommentController extends BlogDataSource
 {
+
     /**
-     * @param integer $id
+     * @param integer $commentId
      * @return Comment|null
      */
-    public static function findComment($id)
+    public static function findComment($commentId)
     {
         return isset(self::$comments[$id]) ? self::$comments[$id] : null;
     }
 
 
     /**
-     * @param integer $storyId
-     * @param integer $limit
-     * @param integer $afterId
-     * @return array
-     */
-    public static function findComments($storyId, $limit = 5, $afterId = null)
-    {
-        $storyComments = isset(self::$storyComments[$storyId]) ? self::$storyComments[$storyId] : [];
-
-        $start = isset($after) ? (int) array_search($afterId, $storyComments) + 1 : 0;
-        $storyComments = array_slice($storyComments, $start, $limit);
-
-        return array_map(
-            function($commentId) {
-                return self::$comments[$commentId];
-            },
-            $storyComments
-        );
-    }
-
-    /**
      * @param integer $commentId
      * @param integer $limit
-     * @param integer $afterId
+     * @param integer $after
      * @return array
      */
     public static function findReplies($commentId, $limit = 5, $afterId = null)
@@ -60,6 +39,7 @@ class CommentController extends BlogDataSource
             $commentReplies
         );
     }
+
 
     /**
      * @param integer $commentId

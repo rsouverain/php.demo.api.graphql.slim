@@ -7,7 +7,6 @@ use GraphQL\Type\Definition\EnumType;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 
-use App\GraphQL\Schema\Blog\AppContext;
 use App\GraphQL\Schema\Blog\Data\Story;
 
 use App\GraphQL\Schema\Blog\TypeRegistry as Types;
@@ -91,7 +90,7 @@ class StoryType extends ObjectType
         return UserController::findUser($story->authorId);
     }
 
-    public function resolveAffordances(Story $story, $args, AppContext $context)
+    public function resolveAffordances(Story $story, $args, $context)
     {
         $isViewer = $context->viewer === UserController::findUser($story->authorId);
         $isLiked = StoryController::isLikedBy($story->id, $context->viewer->id);
@@ -108,31 +107,34 @@ class StoryType extends ObjectType
         return $affordances;
     }
 
-    public function resolveHasViewerLiked(Story $story, $args, AppContext $context)
+    public function resolveHasViewerLiked(Story $story, $args, $context, $info)
     {
         return StoryController::isLikedBy($story->id, $context->viewer->id);
     }
 
     public function resolveTotalCommentCount(Story $story)
     {
-        return CommentController::countComments($story->id);
+        return StoryController::countComments($story->id);
     }
 
     public function resolveComments(Story $story, $args)
     {
         $args += ['after' => null];
-        return CommentController::findComments($story->id, $args['limit'], $args['after']);
+/*        var_dump($story->id);
+        var_dump($args);*/
+
+        return StoryController::findComments($story->id, $args['limit'], $args['after']);
     }
     
-    public function resolveMentions(Story $story, $args, AppContext $context){
+    public function resolveMentions(Story $story, $args, $context){
         return StoryController::findStoryMentions($story->id);
     }
 
-    public function resolveLikedBy(Story $story, $args, AppContext $context){
+    public function resolveLikedBy(Story $story, $args, $context){
         return StoryController::findLikes($story->id,10);
     }
 
-    public function resolveLikes(Story $story, $args, AppContext $context){
+    public function resolveLikes(Story $story, $args, $context){
         return StoryController::findLikes($story->id,10);
     }
 }
