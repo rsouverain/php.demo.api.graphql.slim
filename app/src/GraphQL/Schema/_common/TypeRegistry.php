@@ -4,6 +4,7 @@ namespace App\GraphQL\Schema\_common;
 
 use App\Boilerplate\GraphQL\TypeRegistryDefault;
 use App\GraphQL\Schema\_common\Interfaces\DataNodeInterface;
+use App\GraphQL\Schema\_common\Type\Scalar\DateTime;
 use App\GraphQL\Schema\_common\Type\Scalar\EmailType;
 use App\GraphQL\Schema\_common\Type\Scalar\UrlType;
 
@@ -27,4 +28,9 @@ class TypeRegistry extends TypeRegistryDefault
     public function Url () : callable {
         return $this->get(UrlType::class);
     }
+
+    public function DateTime () {
+        return $this->get(DateTime::class);
+    }
+
 }

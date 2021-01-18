@@ -3,6 +3,7 @@
 namespace App\GraphQL\Schema\demo;
 
 use App\GraphQL\Schema\demo\User\UserAccount;
+use App\GraphQL\Schema\demo\User\UserAccountJwt;
 use App\GraphQL\Schema\demo\User\UserNamespaceQuery;
 
 /**
@@ -13,11 +14,17 @@ use App\GraphQL\Schema\demo\User\UserNamespaceQuery;
  */
 class TypeRegistry extends \App\GraphQL\Schema\_common\TypeRegistry
 {
+
+    // Users
+    public function UserNamespaceQuery () : callable {
+        return $this->get(UserNamespaceQuery::class);
+    }
+
     public function UserAccount () : callable {
         return $this->get(UserAccount::class);
     }
 
-    public function UserNamespaceQuery () : callable {
-        return $this->get(UserNamespaceQuery::class);
+    public function UserAccountJwt () : callable {
+        return $this->get(UserAccountJwt::class);
     }
 }

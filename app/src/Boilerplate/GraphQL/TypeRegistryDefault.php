@@ -71,7 +71,7 @@ class TypeRegistryDefault extends TypeRegistryAbstract
     }
 
     /**
-     * @param Type $type
+     * @param Type|callable $type
      * @return ListOfType
      */
     public static function listOf($type)
@@ -80,7 +80,7 @@ class TypeRegistryDefault extends TypeRegistryAbstract
     }
 
     /**
-     * @param Type $type
+     * @param Type|callable $type
      * @return NonNull
      */
     public static function nonNull($type)

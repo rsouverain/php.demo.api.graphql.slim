@@ -2,7 +2,10 @@
 
 namespace App\GraphQL\Schema\demo\User;
 
+use App\Boilerplate\AppContext;
+use App\Boilerplate\GraphQL\Exception\GenericGraphQlException;
 use App\Boilerplate\GraphQL\Type\Definition\ObjectType;
+use App\GraphQL\Schema\_common\Data\UserAccount\Repository\UserAccountRepository;
 use App\GraphQL\Schema\demo\TypeRegistry;
 use GraphQL\Type\Definition\ResolveInfo;
 
@@ -19,11 +22,11 @@ class UserNamespaceQuery extends ObjectType
             'fields' => [
 
                 'getJWT' => [
-                    'type' => $types::string(),
-                    'description' => 'Request a valid JWT token using the user\'s credentials',
+                    'type' => $types->UserAccountJwt(),
+                    'description' => 'Request a valid JWT token using the user\'s credentials. Returns null if unable to login for various reason',
                     'args' => [
                         [
-                            'name' => 'username',
+                            'name' => 'login',
                             'type' => $types::string(),
                             'description' => 'User login handle',
                             'defaultValue' => null,
@@ -35,14 +38,47 @@ class UserNamespaceQuery extends ObjectType
                             'defaultValue' => null,
                         ],
                     ],
-                    'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) {
-                        return "notimplementedyet";
-                    },
+                    'resolve' => [$this, 'resolveGetJWT'],
+                ],
+
+                '_me' => [
+                    'type' => $types->UserAccount(),
+                    'description' => 'Return the current authenticated user (Using `Authorization: Bearer` header or `token` cookie)',
+                    'resolve' => [$this, 'resolveMe'],
                 ],
 
             ],
         ];
         parent::__construct($config);
+    }
+
+    public function resolveMe($rootValue, $args, AppContext $context, ResolveInfo $info)
+    {
+        return $context->getAuthenticatedUserAccount();
+    }
+
+    public function resolveGetJWT($rootValue, $args, $context, ResolveInfo $info)
+    {
+
+        // Identifying...
+        $accounts = UserAccountRepository::getInstance()->fetchAll();
+        $matchingAccounts = array_filter($accounts, function ($item) use ($args) {
+            return (isset($item) && $item !== null && isset($item['login']) && $item['login'] === $args['login'] && isset($item['password']) && $item['password'] === hash('sha256', $args['password']));
+        });
+
+        if (count($matchingAccounts) > 0) {
+            $account = reset($matchingAccounts);
+            $date = new \DateTime('now', new \DateTimeZone('UTC'));
+            $date->add(new \DateInterval('P1Y')); // +1 year
+
+            return [
+                'user' => $account,
+                'token' => base64_encode($account['id']), // don't do this in real life, use a proper JWE or JWS.
+                'expire' => $date,
+            ];
+        }
+
+        return null;
     }
 
 
