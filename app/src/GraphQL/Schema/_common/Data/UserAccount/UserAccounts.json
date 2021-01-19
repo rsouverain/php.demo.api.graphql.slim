@@ -1,0 +1,16 @@
+{
+  "722bd623-0081-4b6f-b9e7-ef6d6f64d201": {
+    "id": "722bd623-0081-4b6f-b9e7-ef6d6f64d201",
+    "login": "admin",
+    "email": "admin@admin.admin",
+    "password": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+    "aclProfiles": ["admin", "member"]
+  },
+  "d2056872-c809-4258-ba40-b32bbfd78e96": {
+    "id": "d2056872-c809-4258-ba40-b32bbfd78e96",
+    "login": "member",
+    "email": "member@member.member",
+    "password": "e31ab643c44f7a0ec824b59d1194d60dac334200d845e61d2d289daa0f087ea4",
+    "aclProfiles": ["member"]
+  }
+}

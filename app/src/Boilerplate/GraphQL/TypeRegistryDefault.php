@@ -23,7 +23,7 @@ class TypeRegistryDefault extends TypeRegistryAbstract
     private static $mainInstance;
     public static function getInstance () {
         if (!self::$mainInstance) {
-            self::$mainInstance = new self();
+            self::$mainInstance = new static();
         }
         return self::$mainInstance;
     }
@@ -71,7 +71,7 @@ class TypeRegistryDefault extends TypeRegistryAbstract
     }
 
     /**
-     * @param Type $type
+     * @param Type|callable $type
      * @return ListOfType
      */
     public static function listOf($type)
@@ -80,7 +80,7 @@ class TypeRegistryDefault extends TypeRegistryAbstract
     }
 
     /**
-     * @param Type $type
+     * @param Type|callable $type
      * @return NonNull
      */
     public static function nonNull($type)

@@ -30,6 +30,7 @@ class GraphqlController
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        \GraphQL\Error\FormattedError::setInternalErrorMessage('An error occurred while resolving your query');
     }
 
     /**
@@ -42,7 +43,7 @@ class GraphqlController
      */
     public function demoEndpoint(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
-        return (new Endpoint($response, DebugFlag::INCLUDE_TRACE))
+        return (new Endpoint($request, $response, DebugFlag::INCLUDE_DEBUG_MESSAGE | DebugFlag::INCLUDE_TRACE))
             ->executeSchema([
                 'schemaFilePath' => __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'GraphQL'.DIRECTORY_SEPARATOR.'Schema'.DIRECTORY_SEPARATOR.'demo'.DIRECTORY_SEPARATOR.'Demo.schema.php',
             ])
@@ -59,8 +60,7 @@ class GraphqlController
      */
     public function blogEndpoint(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
-        BlogDataSource::init();
-        return (new Endpoint($response, DebugFlag::INCLUDE_TRACE))
+        return (new Endpoint($request, $response, DebugFlag::INCLUDE_DEBUG_MESSAGE | DebugFlag::INCLUDE_TRACE))
             ->executeSchema([
                 'schemaFilePath' => __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'GraphQL'.DIRECTORY_SEPARATOR.'Schema'.DIRECTORY_SEPARATOR.'blog'.DIRECTORY_SEPARATOR.'Blog.schema.php',
             ])
@@ -79,7 +79,7 @@ class GraphqlController
     {
         throw new \Exception('Not Implemented Yet');
         // your code to access items in the container... $this->container->get('');
-        return (new Endpoint($response, DebugFlag::INCLUDE_TRACE))
+        return (new Endpoint($request, $response, DebugFlag::INCLUDE_DEBUG_MESSAGE | DebugFlag::INCLUDE_TRACE))
             ->executeSchema('refs')
         ;
     }

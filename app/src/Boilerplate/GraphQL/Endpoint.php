@@ -2,6 +2,9 @@
 
 namespace App\Boilerplate\GraphQL;
 
+use App\Boilerplate\AppContext;
+use App\GraphQL\Schema\_common\Data\UserAccount\Repository\UserAccountRepository;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 use GraphQL\GraphQL;
@@ -22,6 +25,9 @@ use App\Boilerplate\GraphQL\Exception\PersistedQueryNotSupportedException;
  */
 class Endpoint
 {
+    /** @var ServerRequestInterface  */
+    protected $request;
+
     /** @var null  */
     protected $response;
 
@@ -34,16 +40,17 @@ class Endpoint
 
     /**
      * Endpoint constructor.
+     * @param ServerRequestInterface $request
      * @param null $response
      * @param int $debugFlag
      */
-    public function __construct($response = null, int $debugFlag = 0)
+    public function __construct(ServerRequestInterface $request, $response = null, int $debugFlag = 0)
     {
+        $this->request = $request;
         $this->response = $response;
         $this->isDebugMode = (bool) ($debugFlag > 0);
         self::$debugFlag = $debugFlag;
-        $this->APQ = new AutomaticPersistedQueries(300);
-
+        $this->APQ = new AutomaticPersistedQueries();
     }
 
     /**
@@ -203,10 +210,16 @@ class Endpoint
             (array) $data['variables'],
         );
 
-        $rootValue = null;
-        $contextValue = null;
-
         try {
+            $rootValue = null;
+            $contextValue = AppContext::getInstance();
+            $contextValue->setRequest($this->request);
+            $this->hydrateContextWithAuthenticatedUser();
+
+
+
+            // $debug = DebugFlag::INCLUDE_DEBUG_MESSAGE | DebugFlag::INCLUDE_TRACE;
+
             $httpCode = 200;
             $output = GraphQL
                 ::executeQuery(
@@ -226,7 +239,7 @@ class Endpoint
                 ->setErrorsHandler(function (array $errors, callable $formatter) {
                     return array_map($formatter, $errors);
                 })
-                ->toArray()
+                ->toArray(self::$debugFlag)
             ;
         }
         catch (GenericGraphQlException $ex) {
@@ -239,5 +252,48 @@ class Endpoint
         }
         $this->response = self::setupResponse($this->response, $output, $httpCode);
         return $this->response;
+    }
+
+    protected function hydrateContextWithAuthenticatedUser ()
+    {
+        $token = null;
+        $user = null;
+        if ($this->request instanceof ServerRequestInterface) {
+            $lookupCookie = 'token';
+            $lookupHeader = 'Authorization';
+            $headerRegexp = "/Bearer\s+(.*)$/i";
+            $scheme = $this->request->getUri()->getScheme();
+            $host = $this->request->getUri()->getHost();
+            $header = $this->request->getHeaderLine($lookupHeader);
+
+            $matches = null;
+            if (false === empty($header)) {
+                if (preg_match($headerRegexp, $header, $matches)) {
+//                        $this->log(LogLevel::DEBUG, "Using token from request header");
+                    $token = $matches[1];
+                }
+            }
+
+            /* Token not found in header try a cookie. */
+            $matches = null;
+            if ($token === null) {
+                $cookieParams = $this->request->getCookieParams();
+                if (isset($cookieParams[$lookupCookie])) {
+//                        $this->log(LogLevel::DEBUG, "Using token from cookie");
+                    if (preg_match($headerRegexp, $cookieParams[$lookupCookie], $matches)) {
+                        $token = $matches[1];
+                    }
+                }
+            }
+
+            if ($token !== null) {
+                // don't do this with base 64 in real life
+                $userId = base64_decode($token);
+                $user = UserAccountRepository::getInstance()->fetchByIdentifier($userId);
+                AppContext::getInstance()->setAuthenticatedUserAccount($user);
+            }
+
+        }
+        return $this;
     }
 }

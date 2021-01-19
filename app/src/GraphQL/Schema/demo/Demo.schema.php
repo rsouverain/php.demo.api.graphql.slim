@@ -1,6 +1,6 @@
 <?php
 
-use App\GraphQL\Schema\demo\Type\QueryType;
+use App\GraphQL\Schema\demo\QueryType;
 use App\GraphQL\Schema\demo\TypeRegistry;
 use GraphQL\Type\Schema;
 use GraphQL\Type\SchemaConfig;

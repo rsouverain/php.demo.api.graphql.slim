@@ -23,7 +23,8 @@ abstract class TypeRegistryAbstract
     protected function byClassName($classname)
     {
         $parts = explode('\\', $classname);
-        $cacheName = strtolower(preg_replace('~Type$~', '', $parts[count($parts) - 1]));
+//        $cacheName = strtolower(preg_replace('~Type$~', '', $parts[count($parts) - 1]));
+        $cacheName = (preg_replace('~Type$~', '', $parts[count($parts) - 1]));
         $type = null;
 
         $class = $classname;
@@ -49,14 +50,16 @@ abstract class TypeRegistryAbstract
      */
     public function byTypeName($shortName)
     {
-        $cacheName = strtolower($shortName);
+//        $cacheName = strtolower($shortName);
+        $cacheName = ($shortName);
         $type = null;
 
         if (isset($this->types[$cacheName])) {
             return $this->types[$cacheName];
         }
 
-        $method = lcfirst($shortName);
+        $method = ($shortName);
+//        $method = lcfirst($shortName);
         if(method_exists(get_called_class(), $method)) {
             $type = $this->{$method}();
         }

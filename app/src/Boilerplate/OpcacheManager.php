@@ -43,7 +43,7 @@ class OpcacheManager
      */
     public static function getInstance () {
         if (!self::$mainInstance) {
-            self::$mainInstance = new self();
+            self::$mainInstance = new static();
         }
         return self::$mainInstance;
     }

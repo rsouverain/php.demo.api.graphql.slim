@@ -1,0 +1,22 @@
+{
+  "name": "Project GraphQL Schema",
+  "schemaPath": "cache/schema.introspect.graphql",
+  "extensions": {
+    "endpoints": {
+        "DEV - Demo GraphQL Endpoint": {
+            "url": "http://127.0.0.1:9632/graphql/demo",
+            "headers": {
+              "user-agent": "JS GraphQL"
+            },
+            "introspect": true
+        },
+        "DEV - Blog  GraphQL Endpoint": {
+            "url": "http://127.0.0.1:9632/graphql/blog",
+            "headers": {
+            "user-agent": "JS GraphQL"
+            },
+            "introspect": true
+        }
+    }
+  }
+}
