@@ -1,8 +1,8 @@
 <?php
 namespace App\GraphQL\Schema\Blog\Type;
 
+use App\GraphQL\Schema\Blog\Domain\Services\User\UserService;
 use App\GraphQL\Schema\Blog\Domain\Story\StoryController;
-use App\GraphQL\Schema\Blog\Domain\User\UserController;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 
@@ -11,8 +11,15 @@ use App\GraphQL\Schema\Blog\TypeRegistry as Types;
 
 class QueryType extends ObjectType
 {
+    /**
+     * @var UserService
+     */
+    private $userService;
+
     public function __construct()
     {
+        $this->userService = new UserService();
+
         $config = [
             'name' => 'Query',
             'fields' => [
@@ -66,12 +73,12 @@ class QueryType extends ObjectType
 
     public function user($rootValue, $args)
     {
-        return UserController::findUser($args['id']);
+        return $this->userService->findUser($args['id']);
     }
 
     public function viewer($rootValue, $args)
     {
-        return UserController::findUser("1");
+        return UserService::findUser("1");
         /*        return $context->viewer;*/
     }
 

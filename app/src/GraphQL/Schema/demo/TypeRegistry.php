@@ -20,11 +20,17 @@ class TypeRegistry extends \App\GraphQL\Schema\_common\TypeRegistry
         return $this->get(UserNamespaceQuery::class);
     }
 
+    /**
+     * @return UserAccount
+     * @throws \Exception
+     */
     public function UserAccount () : callable {
         return $this->get(UserAccount::class);
     }
 
+
     public function UserAccountJwt () : callable {
         return $this->get(UserAccountJwt::class);
     }
+
 }

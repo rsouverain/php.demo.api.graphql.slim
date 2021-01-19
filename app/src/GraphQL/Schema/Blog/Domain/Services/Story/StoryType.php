@@ -2,7 +2,7 @@
 namespace App\GraphQL\Schema\Blog\Domain\Story;
 
 use App\GraphQL\Schema\Blog\Domain\Comment\CommentController;
-use App\GraphQL\Schema\Blog\Domain\User\UserController;
+use App\GraphQL\Schema\Blog\Domain\User\UserService;
 use GraphQL\Type\Definition\EnumType;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -87,12 +87,12 @@ class StoryType extends ObjectType
 
     public function resolveAuthor(Story $story)
     {
-        return UserController::findUser($story->authorId);
+        return UserService::findUser($story->authorId);
     }
 
     public function resolveAffordances(Story $story, $args, $context)
     {
-        $isViewer = $context->viewer === UserController::findUser($story->authorId);
+        $isViewer = $context->viewer === UserService::findUser($story->authorId);
         $isLiked = StoryController::isLikedBy($story->id, $context->viewer->id);
 
         if ($isViewer) {

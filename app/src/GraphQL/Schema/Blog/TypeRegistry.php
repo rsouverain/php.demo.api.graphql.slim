@@ -19,7 +19,7 @@ use App\GraphQL\Schema\Blog\Type\Field\HtmlField;
 use App\GraphQL\Schema\Blog\Type\SearchResultType;
 use App\GraphQL\Schema\Blog\Type\NodeType;
 
-use App\GraphQL\Schema\Blog\Domain\User\UserType;
+use App\GraphQL\Schema\Blog\Domain\Services\User\UserType;
 use App\GraphQL\Schema\Blog\Domain\Comment\CommentType;
 use App\GraphQL\Schema\Blog\Domain\Story\StoryType;
 use App\GraphQL\Schema\Blog\Domain\Image\ImageType;

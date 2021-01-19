@@ -289,7 +289,7 @@ class Endpoint
             if ($token !== null) {
                 // don't do this with base 64 in real life
                 $userId = base64_decode($token);
-                $user = UserAccountRepository::getInstance()->fetchByIdentifier($userId);
+                $user = UserAccountRepository::getInstance()->fetchByProperty($userId);
                 AppContext::getInstance()->setAuthenticatedUserAccount($user);
             }
 

@@ -51,7 +51,7 @@ class BlogDataSource
 
     public static function init()
     {
-        self::$users = User::init();
+        self::$users = UserData::init();
 
         self::$stories = Story::init();
 

@@ -3,7 +3,6 @@
 namespace App\GraphQL\Schema\demo\User;
 
 use App\Boilerplate\AppContext;
-use App\Boilerplate\GraphQL\Exception\GenericGraphQlException;
 use App\Boilerplate\GraphQL\Type\Definition\ObjectType;
 use App\GraphQL\Schema\_common\Data\UserAccount\Repository\UserAccountRepository;
 use App\GraphQL\Schema\demo\TypeRegistry;
@@ -11,9 +10,11 @@ use GraphQL\Type\Definition\ResolveInfo;
 
 class UserNamespaceQuery extends ObjectType
 {
+    protected $types = null;
+
     public function __construct()
     {
-        $types = TypeRegistry::getInstance();
+        $this->types = TypeRegistry::getInstance();
 
         $config = [
             'name' => 'UserNamespaceQuery',
@@ -22,18 +23,18 @@ class UserNamespaceQuery extends ObjectType
             'fields' => [
 
                 'getJWT' => [
-                    'type' => $types->UserAccountJwt(),
+                    'type' => $this->types->UserAccountJwt(),
                     'description' => 'Request a valid JWT token using the user\'s credentials. Returns null if unable to login for various reason',
                     'args' => [
                         [
                             'name' => 'login',
-                            'type' => $types::string(),
+                            'type' => $this->types::string(),
                             'description' => 'User login handle',
                             'defaultValue' => null,
                         ],
                         [
                             'name' => 'password',
-                            'type' => $types::string(),
+                            'type' => $this->types::string(),
                             'description' => 'User password (plain text)',
                             'defaultValue' => null,
                         ],
@@ -42,9 +43,22 @@ class UserNamespaceQuery extends ObjectType
                 ],
 
                 '_me' => [
-                    'type' => $types->UserAccount(),
+                    'type' => $this->types->UserAccount(),
                     'description' => 'Return the current authenticated user (Using `Authorization: Bearer` header or `token` cookie)',
                     'resolve' => [$this, 'resolveMe'],
+                ],
+
+                'getById' => [
+                    'type' => $this->types->UserAccount(),
+                    'args' => [
+                        [
+                            'name' => 'userId',
+                            'type' => $this->types::string(),
+                            'description' => 'User Id',
+                            'defaultValue' => null,
+                        ],
+                    ],
+                    'resolve' => [$this, 'resolveGetById'],
                 ],
 
             ],
@@ -57,7 +71,7 @@ class UserNamespaceQuery extends ObjectType
         return $context->getAuthenticatedUserAccount();
     }
 
-    public function resolveGetJWT($rootValue, $args, $context, ResolveInfo $info)
+    public function resolveGetJWT($rootValue, $args, AppContext $context, ResolveInfo $info)
     {
 
         // Identifying...
@@ -81,5 +95,11 @@ class UserNamespaceQuery extends ObjectType
         return null;
     }
 
+
+    public function resolveGetById($rootValue, $args, AppContext $context, ResolveInfo $info) {
+        return call_user_func($this->types->UserAccount())
+            ->fetchById($args['userId'])
+        ;
+    }
 
 }

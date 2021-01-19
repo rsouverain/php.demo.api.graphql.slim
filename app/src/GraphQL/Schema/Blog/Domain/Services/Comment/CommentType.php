@@ -1,7 +1,7 @@
 <?php
 namespace App\GraphQL\Schema\Blog\Domain\Comment;
 
-use App\GraphQL\Schema\Blog\Domain\User\UserController;
+use App\GraphQL\Schema\Blog\Domain\User\UserService;
 
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -54,7 +54,7 @@ class CommentType extends ObjectType
         if ($comment->isAnonymous) {
             return null;
         }
-        return UserController::findUser($comment->authorId);
+        return UserService::findUser($comment->authorId);
     }
 
     public function resolveParent(Comment $comment)

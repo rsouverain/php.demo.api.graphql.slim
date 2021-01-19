@@ -5,16 +5,17 @@ namespace App\Boilerplate\Data;
 interface DefaultRepositoryInterface
 {
     /**
-     * @param array $ids
-     * @param string $identifierName
+     * @param array $keys
+     * @param string $propertyName
      * @return array
      */
-    public function fetchByIdentifiers (array $ids, string $identifierName = 'id') : array ;
+    public function fetchByProperties(array $keys, string $propertyName = 'id') : array ;
 
     /**
-     * @param string $id
-     * @param string $identifierName
+     * @param string $key
+     * @param string $propertyName
      * @return mixed|null
      */
-    public function fetchByIdentifier (string $id, string $identifierName = 'id');
+    public function fetchByProperty(string $key, string $propertyName = 'id');
+
 }
