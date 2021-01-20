@@ -2,6 +2,8 @@
 
 namespace App\Boilerplate\GraphQL;
 
+use App\Boilerplate\GraphQL\Exception\UnknownTypeException;
+
 /**
  * Class TypeRegistryAbstract
  * @package App\Boilerplate\GraphQL
@@ -18,15 +20,12 @@ abstract class TypeRegistryAbstract
     /**
      * @param $classname
      * @return mixed|null
-     * @throws \Exception
+     * @throws UnknownTypeException
      */
     protected function byClassName($classname)
     {
-        $parts = explode('\\', $classname);
-//        $cacheName = strtolower(preg_replace('~Type$~', '', $parts[count($parts) - 1]));
-        $cacheName = (preg_replace('~Type$~', '', $parts[count($parts) - 1]));
+        $cacheName = end(explode('\\', $classname));
         $type = null;
-
         if (!isset($this->types[$cacheName])) {
             if (class_exists($classname)) {
                 $type = new $classname();
@@ -38,7 +37,7 @@ abstract class TypeRegistryAbstract
         $type = $this->types[$cacheName];
 
         if (!$type) {
-            throw new \Exception('Unknown graphql type: ' . $classname);
+            throw new UnknownTypeException($classname);
         }
         return $type;
     }
@@ -46,11 +45,10 @@ abstract class TypeRegistryAbstract
     /**
      * @param $shortName
      * @return mixed|null
-     * @throws \Exception
+     * @throws UnknownTypeException
      */
     public function byTypeName($shortName)
     {
-//        $cacheName = strtolower($shortName);
         $cacheName = ($shortName);
         $type = null;
 
@@ -59,13 +57,12 @@ abstract class TypeRegistryAbstract
         }
 
         $method = ($shortName);
-//        $method = lcfirst($shortName);
         if(method_exists(get_called_class(), $method)) {
             $type = $this->{$method}();
         }
 
         if(!$type) {
-            throw new \Exception("Unknown graphql type: " . $shortName);
+            throw new UnknownTypeException($shortName);
         }
         return $type;
     }
@@ -73,12 +70,26 @@ abstract class TypeRegistryAbstract
     /**
      * @param $classname
      * @return \Closure|mixed|null
-     * @throws \Exception
+     * @throws UnknownTypeException
      */
     public function get($classname)
     {
         return $this->isLazyLoadingGraphqlTypes ? function() use ($classname) {
             return $this->byClassName($classname);
         } : $this->byClassName($classname);
+    }
+
+    /**
+     * is triggered when invoking inaccessible methods in an object context.
+     *
+     * @param $name string
+     * @param $arguments array
+     * @return mixed
+     * @throws UnknownTypeException
+     * @link https://php.net/manual/en/language.oop5.overloading.php#language.oop5.overloading.methods
+     */
+    public function __call($name, $arguments)
+    {
+        return $this->byTypeName($name);
     }
 }
