@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Schema\_common\Interfaces;
+namespace App\GraphQL\Schema\_common\Type\Interfaces;
 
 use App\Boilerplate\GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\Type;

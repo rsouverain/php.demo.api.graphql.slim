@@ -3,7 +3,7 @@
 namespace App\GraphQL\Schema\_common;
 
 use App\Boilerplate\GraphQL\TypeRegistryDefault;
-use App\GraphQL\Schema\_common\Interfaces\DataNodeInterface;
+use App\GraphQL\Schema\_common\Type\Interfaces\DataNodeInterface;
 use App\GraphQL\Schema\_common\Type\Scalar\DateTime;
 use App\GraphQL\Schema\_common\Type\Scalar\EmailType;
 use App\GraphQL\Schema\_common\Type\Scalar\UrlType;

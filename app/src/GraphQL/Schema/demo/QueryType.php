@@ -20,7 +20,10 @@ class QueryType extends ObjectType
             'fields' => [
                 'deprecatedField' => [
                     'type' => $types::string(),
-                    'deprecationReason' => 'This field is deprecated!'
+                    'deprecationReason' => 'This field is deprecated!',
+                    'resolve' => function() {
+                        return 'You can request deprecated field, but it is not displayed in auto-generated documentation by default.';
+                    }
                 ],
                 'fieldWithException' => [
                     'type' => $types::string(),
@@ -41,6 +44,9 @@ class QueryType extends ObjectType
                             )
                         )
                     ),
+                    'resolve' => function ($rootValue, $args, $context, $info) {
+                        return ["World", "!"];
+                    },
                 ],
             ],
 //            'resolveField' => function($rootValue, $args, $context, ResolveInfo $info) {
@@ -51,13 +57,4 @@ class QueryType extends ObjectType
     }
 
 
-    public function hello($rootValue, $args, $context, $info)
-    {
-        return ["World", "!"];
-    }
-
-    public function deprecatedField()
-    {
-        return 'You can request deprecated field, but it is not displayed in auto-generated documentation by default.';
-    }
 }
