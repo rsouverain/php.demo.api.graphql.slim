@@ -30,13 +30,12 @@ class UserAccountRepository extends DefaultRepositoryAbstract
      */
     public function fetchByProperties(array $keys, $propertyName = 'id'): array
     {
-/*        var_dump($keys, $propertyName);
-        exit;*/
-        return $this->_filterDataByProperties(
+        $results = $this->_filterDataByProperties(
             $this->fetchAll(), // don't do this in real life
             $keys,
             $propertyName
         );
+        return $results;
     }
 
     /**

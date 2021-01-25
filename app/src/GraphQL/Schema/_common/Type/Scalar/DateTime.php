@@ -40,7 +40,6 @@ class DateTime extends ScalarType
      */
     public function parseValue($value): ?DateTimeImmutable
     {
-        die('<pre>' . print_r(222, true) . '</pre>');
         return DateTimeImmutable::createFromFormat(\DateTime::ISO8601, $value) ?: null;
     }
 

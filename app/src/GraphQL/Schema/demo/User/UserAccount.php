@@ -60,26 +60,34 @@ class UserAccount extends ObjectType
     /**
      * @param array $keys
      * @return array
-     * @throws \App\Boilerplate\GraphQL\Exception\InvalidDataloaderResultCountException
+     * @throws \App\Boilerplate\GraphQL\Exception\DataLoaderNotFoundException
      */
     public function fetchByIds(array $keys) {
         return UserAccountRepository::getInstance()
             ->getDataLoader()
-            ->loadMany($keys);
+            ->loadMany($keys)
         ;
     }
 
     /**
      * @param string $key
      * @return array
-     * @throws \App\Boilerplate\GraphQL\Exception\InvalidDataloaderResultCountException
+     * @throws \App\Boilerplate\GraphQL\Exception\DataLoaderNotFoundException
      */
     public function fetchById(string $key) {
-        $promise = UserAccountRepository::getInstance()
+        $promise =  UserAccountRepository::getInstance()
             ->getDataLoader()
             ->load($key)
         ;
-        return DataLoader::await($promise);
+//        $promise->then(function(...$args) {
+//            die('<pre>' . print_r($args, true) . '</pre>');
+//        });
+        $xxx = DataLoader::await($promise, true);
+        die('<pre>' . print_r($promise, true) . '</pre>');
+//        return UserAccountRepository::getInstance()
+//            ->getDataLoader()
+//            ->load($key)
+//        ;
     }
 
 }

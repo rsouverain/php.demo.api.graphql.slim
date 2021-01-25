@@ -4,6 +4,10 @@ namespace App\Boilerplate\GraphQL;
 
 use App\Boilerplate\AppContext;
 use App\GraphQL\Schema\_common\Data\UserAccount\Repository\UserAccountRepository;
+use GraphQL\Executor\ExecutionResult;
+use GraphQL\Executor\Promise\Adapter\SyncPromiseAdapter;
+use GraphQL\Executor\Promise\Promise;
+use Overblog\PromiseAdapter\Adapter\WebonyxGraphQLSyncPromiseAdapter;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -37,6 +41,8 @@ class Endpoint
     /** @var int  */
     protected static $debugFlag = 0;
 
+    /** @var WebonyxGraphQLSyncPromiseAdapter  */
+    public static $promiseAdapter;
 
     /**
      * Endpoint constructor.
@@ -51,6 +57,12 @@ class Endpoint
         $this->isDebugMode = (bool) ($debugFlag > 0);
         self::$debugFlag = $debugFlag;
         $this->APQ = new AutomaticPersistedQueries();
+
+        if (!(self::$promiseAdapter instanceof WebonyxGraphQLSyncPromiseAdapter)) {
+            $graphQLPromiseAdapter = new SyncPromiseAdapter();
+            self::$promiseAdapter = new WebonyxGraphQLSyncPromiseAdapter($graphQLPromiseAdapter);
+            GraphQL::setPromiseAdapter($graphQLPromiseAdapter);
+        }
     }
 
     /**
@@ -210,37 +222,40 @@ class Endpoint
             (array) $data['variables'],
         );
 
+        $output = null;
         try {
             $rootValue = null;
             $contextValue = AppContext::getInstance();
             $contextValue->setRequest($this->request);
             $this->hydrateContextWithAuthenticatedUser();
 
-
-
             // $debug = DebugFlag::INCLUDE_DEBUG_MESSAGE | DebugFlag::INCLUDE_TRACE;
-
             $httpCode = 200;
-            $output = GraphQL
-                ::executeQuery(
-                    $this->getSchema($lookupSchemaOptions),
-                    gettype($persistedQuery) === 'string' ? $persistedQuery : $data['query'],
-                    $rootValue,
-                    $contextValue,
-                    (array) $data['variables']
-                )
-                ->setErrorFormatter(function (Error $error) use (&$httpCode) {
-                    // @see https://webonyx.github.io/graphql-php/error-handling/
-                    if ($error->getPrevious() instanceof GenericGraphQlException && $error->getPrevious()->isHttpCode) {
-                        $httpCode = $error->getPrevious()->getCode();
-                    }
-                    return FormattedError::createFromException($error, self::$debugFlag);
-                })
-                ->setErrorsHandler(function (array $errors, callable $formatter) {
-                    return array_map($formatter, $errors);
-                })
-                ->toArray(self::$debugFlag)
-            ;
+            $execResult = GraphQL::executeQuery(
+//                new SyncPromiseAdapter(),
+                $this->getSchema($lookupSchemaOptions),
+                gettype($persistedQuery) === 'string' ? $persistedQuery : $data['query'],
+                $rootValue,
+                $contextValue,
+                (array) $data['variables']
+            );
+//            $promise->then(function (ExecutionResult $execResult) use (&$httpCode) {
+                $output = $execResult
+                    ->setErrorFormatter(function (Error $error) use (&$httpCode) {
+                        // @see https://webonyx.github.io/graphql-php/error-handling/
+                        if ($error->getPrevious() instanceof GenericGraphQlException && $error->getPrevious()->isHttpCode) {
+                            $httpCode = $error->getPrevious()->getCode();
+                        }
+                        return FormattedError::createFromException($error, self::$debugFlag);
+                    })
+                    ->setErrorsHandler(function (array $errors, callable $formatter) {
+                        return array_map($formatter, $errors);
+                    })
+                    ->toArray(self::$debugFlag)
+                ;
+//                return $output;
+//            });
+//            $output = self::$promiseAdapter->await($promise, true);
         }
         catch (GenericGraphQlException $ex) {
             $httpCode = $ex->isHttpCode ? $ex->getCode() : 500;
@@ -250,7 +265,10 @@ class Endpoint
             $httpCode = ($ex->getCode() >= 100) ? $ex->getCode() : 500;
             $output = self::generateOutputError([$ex]);
         }
-        $this->response = self::setupResponse($this->response, $output, $httpCode);
+
+        if ($output !== null) {
+            $this->response = self::setupResponse($this->response, $output, $httpCode);
+        }
         return $this->response;
     }
 
